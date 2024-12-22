@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  font-family: "Oxanium", sans-serif;
+  font-optical-sizing: auto;
+  color: #fff;
+}
+
+body {
+  @apply bg-[#fff] dark:bg-[#161616];
+}
+
+button {
+  @apply select-none;
+}
+
+*::selection {
+  @apply bg-primary text-white;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: #f3f3f300;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #ffffff5e;
+  border-radius: 0.5rem;
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #ffffff75;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: #ffffff9d;
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
