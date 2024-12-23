@@ -1,3 +1,4 @@
+import { api } from "@/lib/axios";
 import { LoginFormData } from "@/modules/common/pages/login/form";
 import { authService } from "@/modules/common/services/auth-service";
 import { AuthToken } from "@/modules/common/types/auth";
@@ -23,7 +24,7 @@ export const useAuthStore = create<AuthStore>((set) => {
     isAuthenticated: !isTokenValid,
     login: async (data) => {
       const response = await authService.login(data);
-
+      console.log(response);
       set({
         user: {
           email: data.email,
@@ -33,10 +34,11 @@ export const useAuthStore = create<AuthStore>((set) => {
         },
         isAuthenticated: true,
       });
-      localStorage.setItem("token", response.token);
+      localStorage.setItem("token", response.access_token);
     },
     logout: () => {
       set({ user: null, isAuthenticated: false });
+      delete api.defaults.headers.common["Authorization"];
       localStorage.removeItem("token");
     },
   };

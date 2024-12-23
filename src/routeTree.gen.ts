@@ -15,12 +15,11 @@ import { Route as VoteImport } from './routes/vote'
 import { Route as SignupImport } from './routes/signup'
 import { Route as SessionImport } from './routes/session'
 import { Route as ResultsImport } from './routes/results'
-import { Route as EnterSessionImport } from './routes/enter-session'
-import { Route as CreateSessionImport } from './routes/create-session'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as VoteRegisteredSessionImport } from './routes/vote-registered/$session'
 import { Route as AuthMenuImport } from './routes/_auth/menu'
+import { Route as AuthHomeImport } from './routes/_auth/home'
 
 // Create/Update Routes
 
@@ -48,18 +47,6 @@ const ResultsRoute = ResultsImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const EnterSessionRoute = EnterSessionImport.update({
-  id: '/enter-session',
-  path: '/enter-session',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const CreateSessionRoute = CreateSessionImport.update({
-  id: '/create-session',
-  path: '/create-session',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const AuthRoute = AuthImport.update({
   id: '/_auth',
   getParentRoute: () => rootRoute,
@@ -83,6 +70,12 @@ const AuthMenuRoute = AuthMenuImport.update({
   getParentRoute: () => AuthRoute,
 } as any)
 
+const AuthHomeRoute = AuthHomeImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AuthRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -99,20 +92,6 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthImport
-      parentRoute: typeof rootRoute
-    }
-    '/create-session': {
-      id: '/create-session'
-      path: '/create-session'
-      fullPath: '/create-session'
-      preLoaderRoute: typeof CreateSessionImport
-      parentRoute: typeof rootRoute
-    }
-    '/enter-session': {
-      id: '/enter-session'
-      path: '/enter-session'
-      fullPath: '/enter-session'
-      preLoaderRoute: typeof EnterSessionImport
       parentRoute: typeof rootRoute
     }
     '/results': {
@@ -143,6 +122,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VoteImport
       parentRoute: typeof rootRoute
     }
+    '/_auth/home': {
+      id: '/_auth/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AuthHomeImport
+      parentRoute: typeof AuthImport
+    }
     '/_auth/menu': {
       id: '/_auth/menu'
       path: '/menu'
@@ -163,10 +149,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AuthRouteChildren {
+  AuthHomeRoute: typeof AuthHomeRoute
   AuthMenuRoute: typeof AuthMenuRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  AuthHomeRoute: AuthHomeRoute,
   AuthMenuRoute: AuthMenuRoute,
 }
 
@@ -175,12 +163,11 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthRouteWithChildren
-  '/create-session': typeof CreateSessionRoute
-  '/enter-session': typeof EnterSessionRoute
   '/results': typeof ResultsRoute
   '/session': typeof SessionRoute
   '/signup': typeof SignupRoute
   '/vote': typeof VoteRoute
+  '/home': typeof AuthHomeRoute
   '/menu': typeof AuthMenuRoute
   '/vote-registered/$session': typeof VoteRegisteredSessionRoute
 }
@@ -188,12 +175,11 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthRouteWithChildren
-  '/create-session': typeof CreateSessionRoute
-  '/enter-session': typeof EnterSessionRoute
   '/results': typeof ResultsRoute
   '/session': typeof SessionRoute
   '/signup': typeof SignupRoute
   '/vote': typeof VoteRoute
+  '/home': typeof AuthHomeRoute
   '/menu': typeof AuthMenuRoute
   '/vote-registered/$session': typeof VoteRegisteredSessionRoute
 }
@@ -202,12 +188,11 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
-  '/create-session': typeof CreateSessionRoute
-  '/enter-session': typeof EnterSessionRoute
   '/results': typeof ResultsRoute
   '/session': typeof SessionRoute
   '/signup': typeof SignupRoute
   '/vote': typeof VoteRoute
+  '/_auth/home': typeof AuthHomeRoute
   '/_auth/menu': typeof AuthMenuRoute
   '/vote-registered/$session': typeof VoteRegisteredSessionRoute
 }
@@ -217,36 +202,33 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | ''
-    | '/create-session'
-    | '/enter-session'
     | '/results'
     | '/session'
     | '/signup'
     | '/vote'
+    | '/home'
     | '/menu'
     | '/vote-registered/$session'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | ''
-    | '/create-session'
-    | '/enter-session'
     | '/results'
     | '/session'
     | '/signup'
     | '/vote'
+    | '/home'
     | '/menu'
     | '/vote-registered/$session'
   id:
     | '__root__'
     | '/'
     | '/_auth'
-    | '/create-session'
-    | '/enter-session'
     | '/results'
     | '/session'
     | '/signup'
     | '/vote'
+    | '/_auth/home'
     | '/_auth/menu'
     | '/vote-registered/$session'
   fileRoutesById: FileRoutesById
@@ -255,8 +237,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
-  CreateSessionRoute: typeof CreateSessionRoute
-  EnterSessionRoute: typeof EnterSessionRoute
   ResultsRoute: typeof ResultsRoute
   SessionRoute: typeof SessionRoute
   SignupRoute: typeof SignupRoute
@@ -267,8 +247,6 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
-  CreateSessionRoute: CreateSessionRoute,
-  EnterSessionRoute: EnterSessionRoute,
   ResultsRoute: ResultsRoute,
   SessionRoute: SessionRoute,
   SignupRoute: SignupRoute,
@@ -288,8 +266,6 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/_auth",
-        "/create-session",
-        "/enter-session",
         "/results",
         "/session",
         "/signup",
@@ -303,14 +279,9 @@ export const routeTree = rootRoute
     "/_auth": {
       "filePath": "_auth.tsx",
       "children": [
+        "/_auth/home",
         "/_auth/menu"
       ]
-    },
-    "/create-session": {
-      "filePath": "create-session.tsx"
-    },
-    "/enter-session": {
-      "filePath": "enter-session.tsx"
     },
     "/results": {
       "filePath": "results.tsx"
@@ -323,6 +294,10 @@ export const routeTree = rootRoute
     },
     "/vote": {
       "filePath": "vote.tsx"
+    },
+    "/_auth/home": {
+      "filePath": "_auth/home.tsx",
+      "parent": "/_auth"
     },
     "/_auth/menu": {
       "filePath": "_auth/menu.tsx",

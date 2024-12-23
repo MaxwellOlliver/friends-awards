@@ -39,6 +39,8 @@ export const Login = () => {
       setIsLoading(true);
       const [error] = await tryCatch(login(data), [AxiosError]);
 
+      console.log(error);
+
       if (error) {
         addToast({
           title: "Erro ao fazer login",
@@ -104,7 +106,7 @@ export const Login = () => {
           </form>
           <p className="text-sm mt-4">
             Ainda não possui uma conta? Crie agora clicando{" "}
-            <Link className="text-primary underline" to="/signup">
+            <Link className="text-primary-500 underline" to="/signup">
               aqui!
             </Link>
           </p>
