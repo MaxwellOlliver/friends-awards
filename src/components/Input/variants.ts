@@ -14,7 +14,7 @@ export const inputVariants = tv({
       "duration-200",
       "rounded-md",
       "ring-primary",
-      "focus-within:ring-1",
+      "focus-within:ring-2",
     ],
     input: [
       "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none outline-none py-4 placeholder:text-gray-500 w-full text-base no-arrow mx-0.5 transition-colors duration-200 bg-transparent",
