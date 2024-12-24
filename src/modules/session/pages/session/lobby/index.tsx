@@ -1,24 +1,14 @@
+import { useEffect, useRef, useState } from "react";
 import { Loader } from "@/components/Loader";
 import { LayoutPage } from "@/layout/components/LayoutPage";
-import { addToastWithError } from "@/lib/toast";
-import { sessionService } from "@/modules/session/services/session";
-import { Session } from "@/modules/session/types/session";
-import { tryCatch } from "@/utils/error";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { LogOut } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { cn } from "@/utils/cn";
-import { Emotes } from "./emotes";
-import { Avatar } from "./avatar";
 import { useAuthStore } from "@/store/auth-store";
+import { ParticipantsList } from "@/modules/session/components/participants-list";
+import { useSession } from "@/modules/session/contexts/session-context";
+import { Emotes } from "./emotes";
 
 export const Lobby = () => {
-  const [session, setSession] = useState<Session | null>(null);
-  const [connectedUsers, setConnectedUsers] = useState<string[]>([
-    "Max",
-    "João",
-    "Dudu gay",
-  ]);
+  const { connectedParticipants, participants } = useSession();
   const [emotes, setEmotes] = useState<Map<string, string>>(new Map());
   const [canEmote, setCanEmote] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -62,27 +52,6 @@ export const Lobby = () => {
     setCanEmote(false);
   };
 
-  const fetchSession = async () => {
-    const [error, sessionData] = await tryCatch(
-      sessionService.getSession(params.sessionId)
-    );
-
-    if (error) {
-      addToastWithError({
-        title: "Erro ao buscar sessão",
-        error,
-      });
-      return;
-    }
-
-    setSession(sessionData);
-    setLoading(false);
-  };
-
-  // useEffect(() => {
-  //   fetchSession();
-  // }, []);
-
   useEffect(() => {
     return () => {
       timeoutMapRef.current.forEach((timeoutId) => {
@@ -112,57 +81,14 @@ export const Lobby = () => {
           </div>
         </div>
         <div className="flex flex-col p-4 w-full">
-          <div className="flex items-center gap-4 justify-between w-full">
+          <div className="flex items-center gap-4 mb-4 justify-between w-full">
             <h1 className="text-lg text-primary-500">
-              Participantes ({connectedUsers.length}/5)
+              Participantes ({connectedParticipants.length}/
+              {participants.length})
             </h1>
             <Emotes addEmote={addEmote} canEmote={canEmote} />
           </div>
-
-          <div className="flex flex-col gap-2 pr-2 mt-4 overflow-y-auto h-96 pt-4">
-            {[
-              "Max",
-              "João",
-              "Dudu gay",
-              "Carlos",
-              "Maria",
-              "Pedrinho",
-              "Ama",
-              "Sofia",
-            ].map((name, index) => {
-              const isUserConnected = connectedUsers.includes(name);
-              const isMe = name === user?.name;
-
-              return (
-                <div
-                  className={cn(
-                    "flex items-center justify-between gap-2 p-4 rounded-md w-full",
-                    {
-                      "opacity-30": !isUserConnected,
-                      "bg-primary bg-opacity-15": isMe,
-                    }
-                  )}
-                  key={index}
-                >
-                  <div className="flex items-center gap-2">
-                    <Avatar emote={emotes.get(name) || null} />
-
-                    <span>
-                      {name} {isMe && "(Eu)"}
-                    </span>
-                  </div>
-                  {isMe && (
-                    <button onClick={() => navigate({ to: "/dashboard/home" })}>
-                      <LogOut
-                        className="size-4 text-error cursor-pointer"
-                        aria-label="Sair da sessão"
-                      />
-                    </button>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          <ParticipantsList emotes={emotes} />
         </div>
       </div>
     </LayoutPage>

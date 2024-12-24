@@ -22,4 +22,13 @@ export const sessionService = {
   joinSession: async (code) => {
     return api.post(`${BASE_URL}/join`, { code });
   },
+  getSessionGameData(id) {
+    return api.get(`${BASE_URL}/${id}/game-state`);
+  },
+  getCategories(id) {
+    return api.get(`${BASE_URL}/${id}/categories`);
+  },
+  getParticipants(id) {
+    return api.get(`${BASE_URL}/${id}/participants`);
+  },
 } satisfies SessionServiceDescriptor;

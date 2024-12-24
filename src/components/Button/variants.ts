@@ -26,6 +26,7 @@ export const buttonVariants = tv({
       "focus:ring-2",
       "focus:ring-offset-2",
       "dark:ring-offset-background",
+      "disabled:pointer-events-none",
     ],
   },
   variants: {

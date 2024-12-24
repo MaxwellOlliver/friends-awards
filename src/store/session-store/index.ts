@@ -18,7 +18,7 @@ type SessionStore = {
 export const useSessionStore = create<SessionStore>((set, get) => ({
   session: null,
   initSession: (session, categories) => set({ session, categories }),
-  currentCategory: categories[1].id,
+  currentCategory: categories[2].id,
   categories,
   winners: new Map<string, string>(),
   registerWinner: (category, nominee) =>
