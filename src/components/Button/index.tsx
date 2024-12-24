@@ -6,7 +6,7 @@ import { cn } from "@/utils/cn";
 import { Loader } from "../Loader";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   size?: "sm" | "md" | "lg";
   variant?: "solid" | "outline" | "ghost";
   color?: "primary" | "secondary" | "error" | "warning" | "success" | "info";
@@ -51,7 +51,7 @@ export const Button = ({
             )}
           </span>
         )}
-        {children}
+        <div>{children}</div>
         {IconRight && (
           <span className="ml-1">
             <IconRight className={icon()} />

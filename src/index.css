@@ -6,10 +6,7 @@ html {
   font-family: "Oxanium", sans-serif;
   font-optical-sizing: auto;
   color: #fff;
-}
-
-body {
-  @apply bg-[#fff] dark:bg-[#161616];
+  background: #1d1d1d;
 }
 
 button {
@@ -23,13 +20,12 @@ button {
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
-  background-color: #f3f3f300;
-  border-radius: 0.5rem;
+  background-color: #1a1b22;
   padding: 0.5rem;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #ffffff5e;
+  background-color: #ffffff34;
   border-radius: 0.5rem;
   width: 5px;
   height: 5px;

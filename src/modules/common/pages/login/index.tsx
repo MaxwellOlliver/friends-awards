@@ -54,7 +54,7 @@ export const Login = () => {
       }
 
       navigate({
-        to: search.redirect ?? "/menu",
+        to: search.redirect ?? "/dashboard/home",
       });
     },
     [form, login, navigate, search.redirect]

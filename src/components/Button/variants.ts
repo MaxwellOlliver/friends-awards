@@ -5,7 +5,9 @@ export const buttonVariants = tv({
     icon: "size-4",
     base: [
       "text-white",
+      "text-nowrap",
       "text-base",
+      "min-w-fit",
       "px-4",
       "py-2",
       "h-fit",
@@ -54,10 +56,11 @@ export const buttonVariants = tv({
       solid: "",
       ghost: {
         base: [
-          "bg-gray-200",
-          "text-slate-950",
-          "hover:bg-gray-300",
-          "active:bg-gray-400",
+          "bg-white",
+          "bg-opacity-5",
+          "text-white",
+          "hover:bg-opacity-15",
+          "active:bg-opacity-25",
           "focus:ring-gray-300",
         ],
       },

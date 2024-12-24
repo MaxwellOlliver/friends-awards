@@ -15,11 +15,15 @@ import { Route as VoteImport } from './routes/vote'
 import { Route as SignupImport } from './routes/signup'
 import { Route as SessionImport } from './routes/session'
 import { Route as ResultsImport } from './routes/results'
+import { Route as EnterSessionImport } from './routes/enter-session'
+import { Route as CreateSessionImport } from './routes/create-session'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as VoteRegisteredSessionImport } from './routes/vote-registered/$session'
-import { Route as AuthMenuImport } from './routes/_auth/menu'
-import { Route as AuthHomeImport } from './routes/_auth/home'
+import { Route as AuthDashboardImport } from './routes/_auth/dashboard'
+import { Route as AuthDashboardMySessionsImport } from './routes/_auth/dashboard/my-sessions'
+import { Route as AuthDashboardHomeImport } from './routes/_auth/dashboard/home'
+import { Route as AuthSessionSessionIdLobbyImport } from './routes/_auth/session/$sessionId.lobby'
 
 // Create/Update Routes
 
@@ -47,6 +51,18 @@ const ResultsRoute = ResultsImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const EnterSessionRoute = EnterSessionImport.update({
+  id: '/enter-session',
+  path: '/enter-session',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CreateSessionRoute = CreateSessionImport.update({
+  id: '/create-session',
+  path: '/create-session',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const AuthRoute = AuthImport.update({
   id: '/_auth',
   getParentRoute: () => rootRoute,
@@ -64,15 +80,27 @@ const VoteRegisteredSessionRoute = VoteRegisteredSessionImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthMenuRoute = AuthMenuImport.update({
-  id: '/menu',
-  path: '/menu',
+const AuthDashboardRoute = AuthDashboardImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => AuthRoute,
 } as any)
 
-const AuthHomeRoute = AuthHomeImport.update({
+const AuthDashboardMySessionsRoute = AuthDashboardMySessionsImport.update({
+  id: '/my-sessions',
+  path: '/my-sessions',
+  getParentRoute: () => AuthDashboardRoute,
+} as any)
+
+const AuthDashboardHomeRoute = AuthDashboardHomeImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => AuthDashboardRoute,
+} as any)
+
+const AuthSessionSessionIdLobbyRoute = AuthSessionSessionIdLobbyImport.update({
+  id: '/session/$sessionId/lobby',
+  path: '/session/$sessionId/lobby',
   getParentRoute: () => AuthRoute,
 } as any)
 
@@ -92,6 +120,20 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
+    '/create-session': {
+      id: '/create-session'
+      path: '/create-session'
+      fullPath: '/create-session'
+      preLoaderRoute: typeof CreateSessionImport
+      parentRoute: typeof rootRoute
+    }
+    '/enter-session': {
+      id: '/enter-session'
+      path: '/enter-session'
+      fullPath: '/enter-session'
+      preLoaderRoute: typeof EnterSessionImport
       parentRoute: typeof rootRoute
     }
     '/results': {
@@ -122,18 +164,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VoteImport
       parentRoute: typeof rootRoute
     }
-    '/_auth/home': {
-      id: '/_auth/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof AuthHomeImport
-      parentRoute: typeof AuthImport
-    }
-    '/_auth/menu': {
-      id: '/_auth/menu'
-      path: '/menu'
-      fullPath: '/menu'
-      preLoaderRoute: typeof AuthMenuImport
+    '/_auth/dashboard': {
+      id: '/_auth/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthDashboardImport
       parentRoute: typeof AuthImport
     }
     '/vote-registered/$session': {
@@ -143,19 +178,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VoteRegisteredSessionImport
       parentRoute: typeof rootRoute
     }
+    '/_auth/dashboard/home': {
+      id: '/_auth/dashboard/home'
+      path: '/home'
+      fullPath: '/dashboard/home'
+      preLoaderRoute: typeof AuthDashboardHomeImport
+      parentRoute: typeof AuthDashboardImport
+    }
+    '/_auth/dashboard/my-sessions': {
+      id: '/_auth/dashboard/my-sessions'
+      path: '/my-sessions'
+      fullPath: '/dashboard/my-sessions'
+      preLoaderRoute: typeof AuthDashboardMySessionsImport
+      parentRoute: typeof AuthDashboardImport
+    }
+    '/_auth/session/$sessionId/lobby': {
+      id: '/_auth/session/$sessionId/lobby'
+      path: '/session/$sessionId/lobby'
+      fullPath: '/session/$sessionId/lobby'
+      preLoaderRoute: typeof AuthSessionSessionIdLobbyImport
+      parentRoute: typeof AuthImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface AuthDashboardRouteChildren {
+  AuthDashboardHomeRoute: typeof AuthDashboardHomeRoute
+  AuthDashboardMySessionsRoute: typeof AuthDashboardMySessionsRoute
+}
+
+const AuthDashboardRouteChildren: AuthDashboardRouteChildren = {
+  AuthDashboardHomeRoute: AuthDashboardHomeRoute,
+  AuthDashboardMySessionsRoute: AuthDashboardMySessionsRoute,
+}
+
+const AuthDashboardRouteWithChildren = AuthDashboardRoute._addFileChildren(
+  AuthDashboardRouteChildren,
+)
+
 interface AuthRouteChildren {
-  AuthHomeRoute: typeof AuthHomeRoute
-  AuthMenuRoute: typeof AuthMenuRoute
+  AuthDashboardRoute: typeof AuthDashboardRouteWithChildren
+  AuthSessionSessionIdLobbyRoute: typeof AuthSessionSessionIdLobbyRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-  AuthHomeRoute: AuthHomeRoute,
-  AuthMenuRoute: AuthMenuRoute,
+  AuthDashboardRoute: AuthDashboardRouteWithChildren,
+  AuthSessionSessionIdLobbyRoute: AuthSessionSessionIdLobbyRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
@@ -163,38 +233,50 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthRouteWithChildren
+  '/create-session': typeof CreateSessionRoute
+  '/enter-session': typeof EnterSessionRoute
   '/results': typeof ResultsRoute
   '/session': typeof SessionRoute
   '/signup': typeof SignupRoute
   '/vote': typeof VoteRoute
-  '/home': typeof AuthHomeRoute
-  '/menu': typeof AuthMenuRoute
+  '/dashboard': typeof AuthDashboardRouteWithChildren
   '/vote-registered/$session': typeof VoteRegisteredSessionRoute
+  '/dashboard/home': typeof AuthDashboardHomeRoute
+  '/dashboard/my-sessions': typeof AuthDashboardMySessionsRoute
+  '/session/$sessionId/lobby': typeof AuthSessionSessionIdLobbyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AuthRouteWithChildren
+  '/create-session': typeof CreateSessionRoute
+  '/enter-session': typeof EnterSessionRoute
   '/results': typeof ResultsRoute
   '/session': typeof SessionRoute
   '/signup': typeof SignupRoute
   '/vote': typeof VoteRoute
-  '/home': typeof AuthHomeRoute
-  '/menu': typeof AuthMenuRoute
+  '/dashboard': typeof AuthDashboardRouteWithChildren
   '/vote-registered/$session': typeof VoteRegisteredSessionRoute
+  '/dashboard/home': typeof AuthDashboardHomeRoute
+  '/dashboard/my-sessions': typeof AuthDashboardMySessionsRoute
+  '/session/$sessionId/lobby': typeof AuthSessionSessionIdLobbyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteWithChildren
+  '/create-session': typeof CreateSessionRoute
+  '/enter-session': typeof EnterSessionRoute
   '/results': typeof ResultsRoute
   '/session': typeof SessionRoute
   '/signup': typeof SignupRoute
   '/vote': typeof VoteRoute
-  '/_auth/home': typeof AuthHomeRoute
-  '/_auth/menu': typeof AuthMenuRoute
+  '/_auth/dashboard': typeof AuthDashboardRouteWithChildren
   '/vote-registered/$session': typeof VoteRegisteredSessionRoute
+  '/_auth/dashboard/home': typeof AuthDashboardHomeRoute
+  '/_auth/dashboard/my-sessions': typeof AuthDashboardMySessionsRoute
+  '/_auth/session/$sessionId/lobby': typeof AuthSessionSessionIdLobbyRoute
 }
 
 export interface FileRouteTypes {
@@ -202,41 +284,55 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | ''
+    | '/create-session'
+    | '/enter-session'
     | '/results'
     | '/session'
     | '/signup'
     | '/vote'
-    | '/home'
-    | '/menu'
+    | '/dashboard'
     | '/vote-registered/$session'
+    | '/dashboard/home'
+    | '/dashboard/my-sessions'
+    | '/session/$sessionId/lobby'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | ''
+    | '/create-session'
+    | '/enter-session'
     | '/results'
     | '/session'
     | '/signup'
     | '/vote'
-    | '/home'
-    | '/menu'
+    | '/dashboard'
     | '/vote-registered/$session'
+    | '/dashboard/home'
+    | '/dashboard/my-sessions'
+    | '/session/$sessionId/lobby'
   id:
     | '__root__'
     | '/'
     | '/_auth'
+    | '/create-session'
+    | '/enter-session'
     | '/results'
     | '/session'
     | '/signup'
     | '/vote'
-    | '/_auth/home'
-    | '/_auth/menu'
+    | '/_auth/dashboard'
     | '/vote-registered/$session'
+    | '/_auth/dashboard/home'
+    | '/_auth/dashboard/my-sessions'
+    | '/_auth/session/$sessionId/lobby'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRouteWithChildren
+  CreateSessionRoute: typeof CreateSessionRoute
+  EnterSessionRoute: typeof EnterSessionRoute
   ResultsRoute: typeof ResultsRoute
   SessionRoute: typeof SessionRoute
   SignupRoute: typeof SignupRoute
@@ -247,6 +343,8 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRouteWithChildren,
+  CreateSessionRoute: CreateSessionRoute,
+  EnterSessionRoute: EnterSessionRoute,
   ResultsRoute: ResultsRoute,
   SessionRoute: SessionRoute,
   SignupRoute: SignupRoute,
@@ -266,6 +364,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/_auth",
+        "/create-session",
+        "/enter-session",
         "/results",
         "/session",
         "/signup",
@@ -274,37 +374,55 @@ export const routeTree = rootRoute
       ]
     },
     "/": {
-      "filePath": "index.tsx"
+      "filePath": "index.ts"
     },
     "/_auth": {
-      "filePath": "_auth.tsx",
+      "filePath": "_auth.ts",
       "children": [
-        "/_auth/home",
-        "/_auth/menu"
+        "/_auth/dashboard",
+        "/_auth/session/$sessionId/lobby"
       ]
     },
+    "/create-session": {
+      "filePath": "create-session.ts"
+    },
+    "/enter-session": {
+      "filePath": "enter-session.ts"
+    },
     "/results": {
-      "filePath": "results.tsx"
+      "filePath": "results.ts"
     },
     "/session": {
-      "filePath": "session.tsx"
+      "filePath": "session.ts"
     },
     "/signup": {
-      "filePath": "signup.tsx"
+      "filePath": "signup.ts"
     },
     "/vote": {
-      "filePath": "vote.tsx"
+      "filePath": "vote.ts"
     },
-    "/_auth/home": {
-      "filePath": "_auth/home.tsx",
-      "parent": "/_auth"
-    },
-    "/_auth/menu": {
-      "filePath": "_auth/menu.tsx",
-      "parent": "/_auth"
+    "/_auth/dashboard": {
+      "filePath": "_auth/dashboard.tsx",
+      "parent": "/_auth",
+      "children": [
+        "/_auth/dashboard/home",
+        "/_auth/dashboard/my-sessions"
+      ]
     },
     "/vote-registered/$session": {
       "filePath": "vote-registered/$session.tsx"
+    },
+    "/_auth/dashboard/home": {
+      "filePath": "_auth/dashboard/home.ts",
+      "parent": "/_auth/dashboard"
+    },
+    "/_auth/dashboard/my-sessions": {
+      "filePath": "_auth/dashboard/my-sessions.ts",
+      "parent": "/_auth/dashboard"
+    },
+    "/_auth/session/$sessionId/lobby": {
+      "filePath": "_auth/session/$sessionId.lobby.ts",
+      "parent": "/_auth"
     }
   }
 }

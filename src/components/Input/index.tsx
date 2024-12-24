@@ -14,6 +14,7 @@ interface InputProps
   iconLeft?: LucideIcon;
   iconRight?: LucideIcon;
   isLoading?: boolean;
+  iconClassName?: string;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
@@ -24,6 +25,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     className,
     isLoading,
     containerClassName,
+    iconClassName,
     ...props
   },
   ref
@@ -60,7 +62,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     <FormField label={props.label} error={props.error} id={id}>
       <div className={cn(control(), containerClassName)}>
         {IconLeft && (
-          <div className="flex items-center text-primary-500">
+          <div
+            className={cn("flex items-center text-primary-500", iconClassName)}
+          >
             <IconLeft className="size-4 mr-2" />
           </div>
         )}
@@ -96,12 +100,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
           )}
         </div>
         {IconRight && !isLoading && (
-          <div className="flex items-center text-primary-500">
+          <div
+            className={cn("flex items-center text-primary-500", iconClassName)}
+          >
             <IconRight className="size-4 ml-2" />
           </div>
         )}
         {isLoading && (
-          <div className="flex items-center text-primary-500">
+          <div
+            className={cn("flex items-center text-primary-500", iconClassName)}
+          >
             <Loader className="w-6 ml-2" />
           </div>
         )}
