@@ -61,7 +61,7 @@ export default {
         "slide-down": "slide-down 0.5s ease-in-out",
         "slide-in": "slide-in 0.5s ease-in-out",
         "slide-left": "slide-left 0.5s ease-in-out",
-        "fade-in": "fade-in 0.5s ease-in-out",
+        "fade-in": "fade-in 0.3s ease-in-out",
         "h-grow": "h-grow 0.5s ease-in-out",
         shake: "shake 0.5s infinite",
         "slide-up": "slide-up 0.5s ease-in-out",
@@ -73,7 +73,7 @@ export default {
       },
       colors: {
         background: "#161616",
-        "background-light": "#41414127",
+        "background-light": "#242323",
         primary: {
           DEFAULT: "#695BFF",
           100: "#FFFFFF",

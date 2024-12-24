@@ -63,7 +63,6 @@ export const Header = () => {
           placeholder="Código da sessão"
           iconLeft={Lock}
           maxLength={6}
-          pattern="[A-Za-z0-9]{6}"
           type="number"
           value={code}
           onChange={handleChange}
