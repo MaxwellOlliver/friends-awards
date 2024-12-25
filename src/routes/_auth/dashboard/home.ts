@@ -1,6 +1,6 @@
-import { Home } from "@/modules/dashboard/pages/home";
-import { createFileRoute } from "@tanstack/react-router";
+import { Home } from '@/modules/dashboard/pages/home'
+import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute("/_auth/dashboard/home")({
+export const Route = createFileRoute('/_auth/dashboard/home')({
   component: Home,
-});
+})

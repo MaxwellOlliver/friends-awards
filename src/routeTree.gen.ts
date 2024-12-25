@@ -8,6 +8,8 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
@@ -21,11 +23,18 @@ import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as VoteRegisteredSessionImport } from './routes/vote-registered/$session'
 import { Route as AuthDashboardImport } from './routes/_auth/dashboard'
-import { Route as AuthSessionSessionIdImport } from './routes/_auth/session/$sessionId'
 import { Route as AuthDashboardMySessionsImport } from './routes/_auth/dashboard/my-sessions'
 import { Route as AuthDashboardHomeImport } from './routes/_auth/dashboard/home'
-import { Route as AuthSessionSessionIdLobbyImport } from './routes/_auth/session/$sessionId.lobby'
-import { Route as AuthSessionSessionIdHostImport } from './routes/_auth/session/$sessionId.host'
+import { Route as AuthSessionSessionIdVoteImport } from './routes/_auth/session/$sessionId/vote'
+import { Route as AuthSessionSessionIdLobbyImport } from './routes/_auth/session/$sessionId/_lobby'
+import { Route as AuthSessionSessionIdLobbyParticipantImport } from './routes/_auth/session/$sessionId/_lobby/participant'
+import { Route as AuthSessionSessionIdLobbyHostImport } from './routes/_auth/session/$sessionId/_lobby/host'
+
+// Create Virtual Routes
+
+const AuthSessionSessionIdImport = createFileRoute(
+  '/_auth/session/$sessionId',
+)()
 
 // Create/Update Routes
 
@@ -106,17 +115,30 @@ const AuthDashboardHomeRoute = AuthDashboardHomeImport.update({
   getParentRoute: () => AuthDashboardRoute,
 } as any)
 
-const AuthSessionSessionIdLobbyRoute = AuthSessionSessionIdLobbyImport.update({
-  id: '/lobby',
-  path: '/lobby',
+const AuthSessionSessionIdVoteRoute = AuthSessionSessionIdVoteImport.update({
+  id: '/vote',
+  path: '/vote',
   getParentRoute: () => AuthSessionSessionIdRoute,
 } as any)
 
-const AuthSessionSessionIdHostRoute = AuthSessionSessionIdHostImport.update({
-  id: '/host',
-  path: '/host',
+const AuthSessionSessionIdLobbyRoute = AuthSessionSessionIdLobbyImport.update({
+  id: '/_lobby',
   getParentRoute: () => AuthSessionSessionIdRoute,
 } as any)
+
+const AuthSessionSessionIdLobbyParticipantRoute =
+  AuthSessionSessionIdLobbyParticipantImport.update({
+    id: '/participant',
+    path: '/participant',
+    getParentRoute: () => AuthSessionSessionIdLobbyRoute,
+  } as any)
+
+const AuthSessionSessionIdLobbyHostRoute =
+  AuthSessionSessionIdLobbyHostImport.update({
+    id: '/host',
+    path: '/host',
+    getParentRoute: () => AuthSessionSessionIdLobbyRoute,
+  } as any)
 
 // Populate the FileRoutesByPath interface
 
@@ -213,19 +235,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSessionSessionIdImport
       parentRoute: typeof AuthImport
     }
-    '/_auth/session/$sessionId/host': {
-      id: '/_auth/session/$sessionId/host'
-      path: '/host'
-      fullPath: '/session/$sessionId/host'
-      preLoaderRoute: typeof AuthSessionSessionIdHostImport
+    '/_auth/session/$sessionId/_lobby': {
+      id: '/_auth/session/$sessionId/_lobby'
+      path: '/session/$sessionId'
+      fullPath: '/session/$sessionId'
+      preLoaderRoute: typeof AuthSessionSessionIdLobbyImport
+      parentRoute: typeof AuthSessionSessionIdRoute
+    }
+    '/_auth/session/$sessionId/vote': {
+      id: '/_auth/session/$sessionId/vote'
+      path: '/vote'
+      fullPath: '/session/$sessionId/vote'
+      preLoaderRoute: typeof AuthSessionSessionIdVoteImport
       parentRoute: typeof AuthSessionSessionIdImport
     }
-    '/_auth/session/$sessionId/lobby': {
-      id: '/_auth/session/$sessionId/lobby'
-      path: '/lobby'
-      fullPath: '/session/$sessionId/lobby'
-      preLoaderRoute: typeof AuthSessionSessionIdLobbyImport
-      parentRoute: typeof AuthSessionSessionIdImport
+    '/_auth/session/$sessionId/_lobby/host': {
+      id: '/_auth/session/$sessionId/_lobby/host'
+      path: '/host'
+      fullPath: '/session/$sessionId/host'
+      preLoaderRoute: typeof AuthSessionSessionIdLobbyHostImport
+      parentRoute: typeof AuthSessionSessionIdLobbyImport
+    }
+    '/_auth/session/$sessionId/_lobby/participant': {
+      id: '/_auth/session/$sessionId/_lobby/participant'
+      path: '/participant'
+      fullPath: '/session/$sessionId/participant'
+      preLoaderRoute: typeof AuthSessionSessionIdLobbyParticipantImport
+      parentRoute: typeof AuthSessionSessionIdLobbyImport
     }
   }
 }
@@ -246,14 +282,31 @@ const AuthDashboardRouteWithChildren = AuthDashboardRoute._addFileChildren(
   AuthDashboardRouteChildren,
 )
 
+interface AuthSessionSessionIdLobbyRouteChildren {
+  AuthSessionSessionIdLobbyHostRoute: typeof AuthSessionSessionIdLobbyHostRoute
+  AuthSessionSessionIdLobbyParticipantRoute: typeof AuthSessionSessionIdLobbyParticipantRoute
+}
+
+const AuthSessionSessionIdLobbyRouteChildren: AuthSessionSessionIdLobbyRouteChildren =
+  {
+    AuthSessionSessionIdLobbyHostRoute: AuthSessionSessionIdLobbyHostRoute,
+    AuthSessionSessionIdLobbyParticipantRoute:
+      AuthSessionSessionIdLobbyParticipantRoute,
+  }
+
+const AuthSessionSessionIdLobbyRouteWithChildren =
+  AuthSessionSessionIdLobbyRoute._addFileChildren(
+    AuthSessionSessionIdLobbyRouteChildren,
+  )
+
 interface AuthSessionSessionIdRouteChildren {
-  AuthSessionSessionIdHostRoute: typeof AuthSessionSessionIdHostRoute
-  AuthSessionSessionIdLobbyRoute: typeof AuthSessionSessionIdLobbyRoute
+  AuthSessionSessionIdLobbyRoute: typeof AuthSessionSessionIdLobbyRouteWithChildren
+  AuthSessionSessionIdVoteRoute: typeof AuthSessionSessionIdVoteRoute
 }
 
 const AuthSessionSessionIdRouteChildren: AuthSessionSessionIdRouteChildren = {
-  AuthSessionSessionIdHostRoute: AuthSessionSessionIdHostRoute,
-  AuthSessionSessionIdLobbyRoute: AuthSessionSessionIdLobbyRoute,
+  AuthSessionSessionIdLobbyRoute: AuthSessionSessionIdLobbyRouteWithChildren,
+  AuthSessionSessionIdVoteRoute: AuthSessionSessionIdVoteRoute,
 }
 
 const AuthSessionSessionIdRouteWithChildren =
@@ -284,9 +337,10 @@ export interface FileRoutesByFullPath {
   '/vote-registered/$session': typeof VoteRegisteredSessionRoute
   '/dashboard/home': typeof AuthDashboardHomeRoute
   '/dashboard/my-sessions': typeof AuthDashboardMySessionsRoute
-  '/session/$sessionId': typeof AuthSessionSessionIdRouteWithChildren
-  '/session/$sessionId/host': typeof AuthSessionSessionIdHostRoute
-  '/session/$sessionId/lobby': typeof AuthSessionSessionIdLobbyRoute
+  '/session/$sessionId': typeof AuthSessionSessionIdLobbyRouteWithChildren
+  '/session/$sessionId/vote': typeof AuthSessionSessionIdVoteRoute
+  '/session/$sessionId/host': typeof AuthSessionSessionIdLobbyHostRoute
+  '/session/$sessionId/participant': typeof AuthSessionSessionIdLobbyParticipantRoute
 }
 
 export interface FileRoutesByTo {
@@ -302,9 +356,10 @@ export interface FileRoutesByTo {
   '/vote-registered/$session': typeof VoteRegisteredSessionRoute
   '/dashboard/home': typeof AuthDashboardHomeRoute
   '/dashboard/my-sessions': typeof AuthDashboardMySessionsRoute
-  '/session/$sessionId': typeof AuthSessionSessionIdRouteWithChildren
-  '/session/$sessionId/host': typeof AuthSessionSessionIdHostRoute
-  '/session/$sessionId/lobby': typeof AuthSessionSessionIdLobbyRoute
+  '/session/$sessionId': typeof AuthSessionSessionIdLobbyRouteWithChildren
+  '/session/$sessionId/vote': typeof AuthSessionSessionIdVoteRoute
+  '/session/$sessionId/host': typeof AuthSessionSessionIdLobbyHostRoute
+  '/session/$sessionId/participant': typeof AuthSessionSessionIdLobbyParticipantRoute
 }
 
 export interface FileRoutesById {
@@ -322,8 +377,10 @@ export interface FileRoutesById {
   '/_auth/dashboard/home': typeof AuthDashboardHomeRoute
   '/_auth/dashboard/my-sessions': typeof AuthDashboardMySessionsRoute
   '/_auth/session/$sessionId': typeof AuthSessionSessionIdRouteWithChildren
-  '/_auth/session/$sessionId/host': typeof AuthSessionSessionIdHostRoute
-  '/_auth/session/$sessionId/lobby': typeof AuthSessionSessionIdLobbyRoute
+  '/_auth/session/$sessionId/_lobby': typeof AuthSessionSessionIdLobbyRouteWithChildren
+  '/_auth/session/$sessionId/vote': typeof AuthSessionSessionIdVoteRoute
+  '/_auth/session/$sessionId/_lobby/host': typeof AuthSessionSessionIdLobbyHostRoute
+  '/_auth/session/$sessionId/_lobby/participant': typeof AuthSessionSessionIdLobbyParticipantRoute
 }
 
 export interface FileRouteTypes {
@@ -342,8 +399,9 @@ export interface FileRouteTypes {
     | '/dashboard/home'
     | '/dashboard/my-sessions'
     | '/session/$sessionId'
+    | '/session/$sessionId/vote'
     | '/session/$sessionId/host'
-    | '/session/$sessionId/lobby'
+    | '/session/$sessionId/participant'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -359,8 +417,9 @@ export interface FileRouteTypes {
     | '/dashboard/home'
     | '/dashboard/my-sessions'
     | '/session/$sessionId'
+    | '/session/$sessionId/vote'
     | '/session/$sessionId/host'
-    | '/session/$sessionId/lobby'
+    | '/session/$sessionId/participant'
   id:
     | '__root__'
     | '/'
@@ -376,8 +435,10 @@ export interface FileRouteTypes {
     | '/_auth/dashboard/home'
     | '/_auth/dashboard/my-sessions'
     | '/_auth/session/$sessionId'
-    | '/_auth/session/$sessionId/host'
-    | '/_auth/session/$sessionId/lobby'
+    | '/_auth/session/$sessionId/_lobby'
+    | '/_auth/session/$sessionId/vote'
+    | '/_auth/session/$sessionId/_lobby/host'
+    | '/_auth/session/$sessionId/_lobby/participant'
   fileRoutesById: FileRoutesById
 }
 
@@ -474,20 +535,32 @@ export const routeTree = rootRoute
       "parent": "/_auth/dashboard"
     },
     "/_auth/session/$sessionId": {
-      "filePath": "_auth/session/$sessionId.tsx",
+      "filePath": "_auth/session/$sessionId",
       "parent": "/_auth",
       "children": [
-        "/_auth/session/$sessionId/host",
-        "/_auth/session/$sessionId/lobby"
+        "/_auth/session/$sessionId/_lobby",
+        "/_auth/session/$sessionId/vote"
       ]
     },
-    "/_auth/session/$sessionId/host": {
-      "filePath": "_auth/session/$sessionId.host.ts",
+    "/_auth/session/$sessionId/_lobby": {
+      "filePath": "_auth/session/$sessionId/_lobby.tsx",
+      "parent": "/_auth/session/$sessionId",
+      "children": [
+        "/_auth/session/$sessionId/_lobby/host",
+        "/_auth/session/$sessionId/_lobby/participant"
+      ]
+    },
+    "/_auth/session/$sessionId/vote": {
+      "filePath": "_auth/session/$sessionId/vote.ts",
       "parent": "/_auth/session/$sessionId"
     },
-    "/_auth/session/$sessionId/lobby": {
-      "filePath": "_auth/session/$sessionId.lobby.ts",
-      "parent": "/_auth/session/$sessionId"
+    "/_auth/session/$sessionId/_lobby/host": {
+      "filePath": "_auth/session/$sessionId/_lobby/host.ts",
+      "parent": "/_auth/session/$sessionId/_lobby"
+    },
+    "/_auth/session/$sessionId/_lobby/participant": {
+      "filePath": "_auth/session/$sessionId/_lobby/participant.ts",
+      "parent": "/_auth/session/$sessionId/_lobby"
     }
   }
 }

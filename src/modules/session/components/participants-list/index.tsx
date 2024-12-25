@@ -4,15 +4,57 @@ import { useNavigate } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 import { Avatar } from "./avatar";
 import { useSession } from "../../contexts/session-context";
+import { Emotes } from "./emotes";
+import { useEffect, useRef, useState } from "react";
 
-interface ParticipantsListProps {
-  emotes?: Map<string, string>;
-}
+export const ParticipantsList = () => {
+  const [emotes, setEmotes] = useState<Map<string, string>>(new Map());
+  const [canEmote, setCanEmote] = useState(true);
 
-export const ParticipantsList = ({ emotes }: ParticipantsListProps) => {
   const navigate = useNavigate();
   const { connectedParticipants, participants } = useSession();
   const user = useAuthStore((state) => state.user);
+
+  const timeoutMapRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
+
+  const addEmote = (emote: string, participant: string) => {
+    setEmotes((prev) => {
+      const newEmotes = new Map(prev);
+      newEmotes.set(participant, emote);
+
+      return newEmotes;
+    });
+
+    if (participant === user?.name) {
+      // emit socket event
+    }
+
+    const timeoutId = setTimeout(() => {
+      setEmotes((prev) => {
+        const newEmotes = new Map(prev);
+        newEmotes.delete(participant);
+
+        return newEmotes;
+      });
+      timeoutMapRef.current.delete(participant);
+    }, 5000);
+
+    const canEmoteTimeoutId = setTimeout(() => {
+      setCanEmote(true);
+    }, 30000);
+
+    timeoutMapRef.current.set(participant, timeoutId);
+    timeoutMapRef.current.set("can-emote", canEmoteTimeoutId);
+    setCanEmote(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      timeoutMapRef.current.forEach((timeoutId) => {
+        clearTimeout(timeoutId);
+      });
+    };
+  }, []);
 
   return (
     <div className="flex flex-col gap-2 pr-2 overflow-y-auto max-h-96 h-96 pt-4">
@@ -23,9 +65,9 @@ export const ParticipantsList = ({ emotes }: ParticipantsListProps) => {
         return (
           <div
             className={cn(
-              "flex items-center justify-between gap-2 p-4 rounded-md w-full",
+              "flex items-center justify-between gap-2 p-4 rounded-md w-full bg-background-light",
               {
-                "opacity-30": !isUserConnected,
+                "opacity-20": !isUserConnected,
                 "bg-primary bg-opacity-15": isMe,
               }
             )}
@@ -37,6 +79,7 @@ export const ParticipantsList = ({ emotes }: ParticipantsListProps) => {
               <span>
                 {participant.name} {isMe && "(Eu)"}
               </span>
+              {isMe && <Emotes addEmote={addEmote} canEmote={canEmote} />}
             </div>
             {isMe && (
               <button onClick={() => navigate({ to: "/dashboard/home" })}>

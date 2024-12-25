@@ -21,17 +21,17 @@ export const Emotes = ({
     <Popover
       content={({ onToggle }) => (
         <div className="flex flex-col gap-4 p-4 items-center bg-background-light rounded-md">
-          <div className="grid grid-cols-4 gap-4">
+          <div className="grid grid-cols-4">
             {emotes.map((emote) => (
               <button
                 key={emote.code}
-                className="flex items-center gap-4 p-4 hover:ring-2 outline-none focus:ring-2  ring-primary cursor-pointer rounded-md"
+                className="flex items-center gap-4 p-2 hover:ring-2 outline-none focus:ring-2  ring-primary cursor-pointer rounded-md"
                 onClick={() => {
-                  addEmote(emote.code, user.name);
+                  addEmote(emote.code, user.id);
                   onToggle();
                 }}
               >
-                <img src={emote.image} alt={emote.name} className="w-10 h-10" />
+                <img src={emote.image} alt={emote.name} className="w-8 h-8" />
               </button>
             ))}
           </div>
@@ -43,16 +43,16 @@ export const Emotes = ({
           </span>
         </div>
       )}
-      position="bottom-right"
+      position="bottom-left"
     >
       {({ isOpen, onToggle }) => (
         <button
-          className="disabled:opacity-50 disabled:cursor-not-allowed"
+          className="disabled:opacity-50 disabled:cursor-not-allowed h-full flex items-center"
           onClick={onToggle}
           disabled={!canEmote}
         >
           <SmilePlus
-            className={cn("size-5 text-secondary", {
+            className={cn("size-4 text-secondary", {
               "text-primary": isOpen,
             })}
           />

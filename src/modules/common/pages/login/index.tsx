@@ -39,8 +39,6 @@ export const Login = () => {
       setIsLoading(true);
       const [error] = await tryCatch(login(data), [AxiosError]);
 
-      console.log(error);
-
       if (error) {
         addToast({
           title: "Erro ao fazer login",

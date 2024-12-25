@@ -7,6 +7,7 @@ interface TooltipProps {
   position?: "top" | "bottom" | "left" | "right";
 }
 
+// TODO: Make it render inside a portal. This way is a complete shit, cuz tooltip is forcing scroll on parent in some situations
 export const Tooltip: React.FC<TooltipProps> = ({
   children,
   text,
@@ -25,29 +26,31 @@ export const Tooltip: React.FC<TooltipProps> = ({
 
       const tooltipRect = tooltip.getBoundingClientRect();
       const contentRect = content.getBoundingClientRect();
-      const heightWithPadding = tooltipRect.height + 16;
 
-      if (position === "top" && contentRect.top - heightWithPadding < 0) {
+      const height = tooltipRect.height;
+      const width = tooltipRect.width;
+
+      if (position === "top" && contentRect.top - height < 0) {
         setInternalPosition("bottom");
         return;
       }
 
       if (
         position === "bottom" &&
-        contentRect.bottom + heightWithPadding > window.innerHeight
+        contentRect.bottom + height > window.innerHeight
       ) {
         setInternalPosition("top");
         return;
       }
 
-      if (position === "left" && contentRect.left - heightWithPadding < 0) {
+      if (position === "left" && contentRect.left - width < 0) {
         setInternalPosition("right");
         return;
       }
 
       if (
         position === "right" &&
-        contentRect.right + heightWithPadding > window.innerWidth
+        contentRect.right + width > window.innerWidth
       ) {
         setInternalPosition("left");
         return;

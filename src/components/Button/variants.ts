@@ -6,10 +6,8 @@ export const buttonVariants = tv({
     base: [
       "text-white",
       "text-nowrap",
-      "text-base",
       "min-w-fit",
       "px-4",
-      "py-2",
       "h-fit",
       "relative",
       "overflow-hidden",
@@ -45,11 +43,11 @@ export const buttonVariants = tv({
       },
       md: {
         icon: "size-4",
-        base: "px-4 py-4 text-sm",
+        base: "px-4 py-3 text-sm",
       },
       lg: {
         icon: "size-5",
-        base: "px-6 py-5 text-md",
+        base: "px-6 py-5 text-base",
       },
     },
     variant: {

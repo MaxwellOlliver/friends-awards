@@ -39,7 +39,7 @@ export const Header = () => {
     }
 
     navigate({
-      to: "/session/$sessionId/lobby",
+      to: "/session/$sessionId/participant",
       params: {
         sessionId: data.sessionId,
       },
@@ -70,12 +70,11 @@ export const Header = () => {
         />
         <Button
           color="primary"
-          size="lg"
           className="!ring-offset-secondary"
           aria-label="Entrar na sessão"
           onClick={handleJoinSession}
         >
-          <ArrowRight className="size-4" />
+          <ArrowRight className="size-5" />
         </Button>
       </div>
     </header>

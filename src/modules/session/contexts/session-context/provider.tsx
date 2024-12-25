@@ -20,25 +20,36 @@ export const SessionProvider = ({
   const [isLoading, setIsLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [participants, setParticipants] = useState<User[]>([]);
+  const [participants, setParticipants] = useState<SocketUser[]>([
+    {
+      id: "5455a36e-1beb-4cd3-985e-5cb7ea898e77",
+      name: "Max",
+      isHost: true,
+    },
+    {
+      id: "5455a36e-1beb-4cd3-985e-5cb7ea898e78",
+      name: "João",
+      isHost: false,
+    },
+    {
+      id: "5455a36e-1beb-4cd3-985e-5cb7ea898e79",
+      name: "Maria",
+      isHost: false,
+    },
+    {
+      id: "5455a36e-1beb-4cd3-985e-5cb7ea898e67",
+      name: "Carlos",
+      isHost: false,
+    },
+  ]);
   const [gameData, setGameData] = useState<GameData | null>(null);
   const [connectedParticipants, setConnectedParticipants] = useState<string[]>([
-    {
-      id: "1",
-      name: "Max",
-    },
-    {
-      id: "2",
-      name: "João",
-    },
-    {
-      id: "3",
-      name: "Edu",
-    },
+    "5455a36e-1beb-4cd3-985e-5cb7ea898e77",
+    "5455a36e-1beb-4cd3-985e-5cb7ea898e78",
   ]);
 
   const params = useParams({
-    from: "/_auth/session/$sessionId",
+    from: "/_auth/session/$sessionId/_lobby",
   });
   const navigate = useNavigate();
 
@@ -117,14 +128,14 @@ export const SessionProvider = ({
         participants,
       }}
     >
-      {isLoading ? (
+      {/* {isLoading ? (
         <div className="flex items-center gap-4">
           <Loader />
           <span>Carregando dados da sessão...</span>
         </div>
-      ) : (
-        children
-      )}
+      ) : ( */}
+      {children}
+      {/* )} */}
     </SessionContext.Provider>
   );
 };

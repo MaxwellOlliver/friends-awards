@@ -4,6 +4,7 @@ import { GameData, Session } from "../../types/session";
 export type SocketUser = {
   id: string;
   name: string;
+  isHost: boolean;
 };
 
 export type UpdateGameDataFn = {

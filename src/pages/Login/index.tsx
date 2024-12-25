@@ -33,7 +33,7 @@ export const Login = () => {
   const handleSubmit = async (data: LoginFormData) => {
     console.log(data);
 
-    const [error, loginData] = await tryCatch(() => login(data));
+    const [error, loginData] = await tryCatch(login(data));
 
     if (error) {
       console.error(error);
@@ -85,7 +85,10 @@ export const Login = () => {
           </form>
           <p className="text-sm mt-4">
             Ainda não possui uma conta? Crie agora clicando{" "}
-            <Link className="text-primary underline" to="/create-user">
+            <Link
+              className="text-primary underline"
+              to="/dashboard/my-sessions"
+            >
               aqui!
             </Link>
           </p>

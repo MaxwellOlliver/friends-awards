@@ -42,7 +42,7 @@ button {
 .thin-scrollbar::-webkit-scrollbar {
   width: 4px;
   height: 4px;
-  background-color: #fff;
+  background-color: #1d1d1d;
   border-radius: 0.5rem;
   padding: 0.5rem;
 }

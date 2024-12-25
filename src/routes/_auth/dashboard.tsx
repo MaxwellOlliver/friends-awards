@@ -1,11 +1,12 @@
 import { MainLayout } from "@/layout/components/MainLayout";
 import { Sidebar } from "@/layout/components/Sidebar";
 import { useSidebarStore } from "@/store/sidebar-store";
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
 import { Menu } from "lucide-react";
 
 export const Route = createFileRoute("/_auth/dashboard")({
   component: RouteComponent,
+  notFoundComponent: () => <Navigate to="/dashboard/home" />,
 });
 
 function RouteComponent() {

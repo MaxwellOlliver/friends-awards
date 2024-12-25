@@ -17,11 +17,12 @@ import { TabsData } from "@/components/Tabs/types";
 import { LayoutPage } from "@/layout/components/LayoutPage";
 import { ParticipantsList } from "@/modules/session/components/participants-list";
 import { useSession } from "@/modules/session/contexts/session-context";
+import { CategoriesList } from "@/modules/session/components/categories-list";
 
 export const Host = () => {
   const { gameData, connectedParticipants, participants } = useSession();
   const params = useParams({
-    from: "/_auth/session/$sessionId/host",
+    from: "/_auth/session/$sessionId/_lobby/host",
   });
 
   const tabs: TabsData[] = [
@@ -43,7 +44,7 @@ export const Host = () => {
       key: "categories",
       title: "Categorias",
       icon: Medal,
-      content: <div>Categorias</div>,
+      content: <CategoriesList />,
       forceRender: true,
     },
   ];
@@ -102,7 +103,7 @@ export const Host = () => {
           </div>
         </div>
         <div className="h-full flex">
-          <Tabs items={tabs} />
+          <Tabs items={tabs} defaultActiveTabKey="categories" />
         </div>
       </div>
     </LayoutPage>

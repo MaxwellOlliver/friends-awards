@@ -1,36 +1,33 @@
-import { useContext, useState } from "react";
-import { Category } from "@/types/categories";
-import { VotesContext } from "@/contexts/votes-context";
-import { Check, Crown, Gamepad2, Medal, Trophy, Vote } from "lucide-react";
+import { useState } from "react";
+import {
+  Check,
+  Crown,
+  Gamepad2,
+  Medal,
+  Trophy,
+  Vote as VoteIcon,
+} from "lucide-react";
 import { cn } from "@/utils/cn";
-import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/Button";
+import { categories } from "@/constants/categories";
 
-export const CategoryVoting = ({
-  category,
-}: {
-  category: Category;
-  index: number;
-}) => {
-  const navigate = useNavigate();
-  const { registerVote, votes } = useContext(VotesContext);
-  const [selectedNominee, setSelectedNominee] = useState<string | null>(
-    () => votes.get(category.id) || null
-  );
+interface VoteFormProps {
+  onVoteRegistered: (nomineeId: string) => void;
+}
+
+export const VoteForm = ({ onVoteRegistered }: VoteFormProps) => {
+  const category = categories[0];
+
+  const [selectedNominee, setSelectedNominee] = useState<string | null>(null);
 
   const handleRegisterVote = () => {
     if (selectedNominee) {
-      registerVote(category.id, selectedNominee);
-      navigate({
-        to: "/vote-registered/$session",
-        params: { session: category.id },
-        search: { hasVoted: true },
-      });
+      onVoteRegistered(selectedNominee);
     }
   };
 
   return (
-    <div className="flex flex-col max-w-[900px]">
+    <div className="flex flex-col max-w-[900px] pb-12">
       <div className="flex gap-4 text-white mb-8">
         <Gamepad2 className="size-8" />
         <Crown className="size-8" />
@@ -54,7 +51,7 @@ export const CategoryVoting = ({
           <button
             key={nominee}
             className={cn(
-              "w-full flex items-center rounded-md text-white px-4 py-2 gap-2 hover:bg-[#202020] transition-colors",
+              "w-full flex items-center rounded-md text-white px-4 py-2 gap-2 hover:bg-[#202020] transition-colors min-w-0",
               {
                 "bg-white text-black hover:bg-white":
                   selectedNominee === nominee,
@@ -68,7 +65,7 @@ export const CategoryVoting = ({
           >
             <div
               className={cn(
-                "size-4 border-white border rounded-full flex items-center justify-center",
+                "size-4 min-w-4 border-white border rounded-full flex items-center justify-center",
                 {
                   "bg-primary": selectedNominee === nominee,
                 }
@@ -78,22 +75,18 @@ export const CategoryVoting = ({
                 <Check className="size-3 stroke-white" />
               )}
             </div>
-            <span className="text-nowrap">{nominee}</span>
+            <span className="text-wrap break-words min-w-0 text-left">
+              {nominee}
+            </span>
           </button>
         ))}
       </div>
-      <footer
-        className="opacity-0 animate-slide-down mt-12"
-        style={{
-          animationDelay: `${1200 + category.nominees.length * 200}ms`,
-          animationFillMode: "forwards",
-        }}
-      >
+      <footer className="mt-12">
         <Button
           color="primary"
           onClick={handleRegisterVote}
           disabled={!selectedNominee}
-          iconLeft={Vote}
+          iconLeft={VoteIcon}
           className="w-full"
         >
           Registrar voto
