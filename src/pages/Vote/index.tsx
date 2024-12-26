@@ -1,6 +1,4 @@
-import { useContext, useState } from "react";
-import { Category } from "@/types/categories";
-import { VotesContext } from "@/contexts/votes-context";
+import { useState } from "react";
 import {
   Check,
   Crown,

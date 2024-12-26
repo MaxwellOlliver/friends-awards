@@ -14,6 +14,7 @@ export const inputVariants = tv({
       "rounded-md",
       "ring-primary",
       "focus-within:ring-2",
+      "transition-all",
     ],
     input: [
       "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none outline-none text-sm py-3 placeholder:text-gray-500 w-full text-sm no-arrow mx-0.5 transition-colors duration-200 bg-transparent",

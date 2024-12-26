@@ -5,9 +5,9 @@ import {
   DropdownIndicator,
   MultiValueRemove,
 } from "./customization";
-import { FormField } from "../_internal/FormField";
 import { forwardRef, useId } from "react";
 import { Control, Controller, RefCallBack } from "react-hook-form";
+import { FormField } from "../Form/form-field";
 export interface SelectProps extends React.ComponentProps<typeof RcSelect> {
   label?: string;
   error?: string;

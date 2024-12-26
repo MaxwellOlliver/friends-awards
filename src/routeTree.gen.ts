@@ -25,6 +25,7 @@ import { Route as VoteRegisteredSessionImport } from './routes/vote-registered/$
 import { Route as AuthDashboardImport } from './routes/_auth/dashboard'
 import { Route as AuthDashboardMySessionsImport } from './routes/_auth/dashboard/my-sessions'
 import { Route as AuthDashboardHomeImport } from './routes/_auth/dashboard/home'
+import { Route as AuthDashboardCreateSessionImport } from './routes/_auth/dashboard/create-session'
 import { Route as AuthSessionSessionIdVoteImport } from './routes/_auth/session/$sessionId/vote'
 import { Route as AuthSessionSessionIdLobbyImport } from './routes/_auth/session/$sessionId/_lobby'
 import { Route as AuthSessionSessionIdLobbyParticipantImport } from './routes/_auth/session/$sessionId/_lobby/participant'
@@ -114,6 +115,14 @@ const AuthDashboardHomeRoute = AuthDashboardHomeImport.update({
   path: '/home',
   getParentRoute: () => AuthDashboardRoute,
 } as any)
+
+const AuthDashboardCreateSessionRoute = AuthDashboardCreateSessionImport.update(
+  {
+    id: '/create-session',
+    path: '/create-session',
+    getParentRoute: () => AuthDashboardRoute,
+  } as any,
+)
 
 const AuthSessionSessionIdVoteRoute = AuthSessionSessionIdVoteImport.update({
   id: '/vote',
@@ -214,6 +223,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof VoteRegisteredSessionImport
       parentRoute: typeof rootRoute
     }
+    '/_auth/dashboard/create-session': {
+      id: '/_auth/dashboard/create-session'
+      path: '/create-session'
+      fullPath: '/dashboard/create-session'
+      preLoaderRoute: typeof AuthDashboardCreateSessionImport
+      parentRoute: typeof AuthDashboardImport
+    }
     '/_auth/dashboard/home': {
       id: '/_auth/dashboard/home'
       path: '/home'
@@ -269,11 +285,13 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AuthDashboardRouteChildren {
+  AuthDashboardCreateSessionRoute: typeof AuthDashboardCreateSessionRoute
   AuthDashboardHomeRoute: typeof AuthDashboardHomeRoute
   AuthDashboardMySessionsRoute: typeof AuthDashboardMySessionsRoute
 }
 
 const AuthDashboardRouteChildren: AuthDashboardRouteChildren = {
+  AuthDashboardCreateSessionRoute: AuthDashboardCreateSessionRoute,
   AuthDashboardHomeRoute: AuthDashboardHomeRoute,
   AuthDashboardMySessionsRoute: AuthDashboardMySessionsRoute,
 }
@@ -335,6 +353,7 @@ export interface FileRoutesByFullPath {
   '/vote': typeof VoteRoute
   '/dashboard': typeof AuthDashboardRouteWithChildren
   '/vote-registered/$session': typeof VoteRegisteredSessionRoute
+  '/dashboard/create-session': typeof AuthDashboardCreateSessionRoute
   '/dashboard/home': typeof AuthDashboardHomeRoute
   '/dashboard/my-sessions': typeof AuthDashboardMySessionsRoute
   '/session/$sessionId': typeof AuthSessionSessionIdLobbyRouteWithChildren
@@ -354,6 +373,7 @@ export interface FileRoutesByTo {
   '/vote': typeof VoteRoute
   '/dashboard': typeof AuthDashboardRouteWithChildren
   '/vote-registered/$session': typeof VoteRegisteredSessionRoute
+  '/dashboard/create-session': typeof AuthDashboardCreateSessionRoute
   '/dashboard/home': typeof AuthDashboardHomeRoute
   '/dashboard/my-sessions': typeof AuthDashboardMySessionsRoute
   '/session/$sessionId': typeof AuthSessionSessionIdLobbyRouteWithChildren
@@ -374,6 +394,7 @@ export interface FileRoutesById {
   '/vote': typeof VoteRoute
   '/_auth/dashboard': typeof AuthDashboardRouteWithChildren
   '/vote-registered/$session': typeof VoteRegisteredSessionRoute
+  '/_auth/dashboard/create-session': typeof AuthDashboardCreateSessionRoute
   '/_auth/dashboard/home': typeof AuthDashboardHomeRoute
   '/_auth/dashboard/my-sessions': typeof AuthDashboardMySessionsRoute
   '/_auth/session/$sessionId': typeof AuthSessionSessionIdRouteWithChildren
@@ -396,6 +417,7 @@ export interface FileRouteTypes {
     | '/vote'
     | '/dashboard'
     | '/vote-registered/$session'
+    | '/dashboard/create-session'
     | '/dashboard/home'
     | '/dashboard/my-sessions'
     | '/session/$sessionId'
@@ -414,6 +436,7 @@ export interface FileRouteTypes {
     | '/vote'
     | '/dashboard'
     | '/vote-registered/$session'
+    | '/dashboard/create-session'
     | '/dashboard/home'
     | '/dashboard/my-sessions'
     | '/session/$sessionId'
@@ -432,6 +455,7 @@ export interface FileRouteTypes {
     | '/vote'
     | '/_auth/dashboard'
     | '/vote-registered/$session'
+    | '/_auth/dashboard/create-session'
     | '/_auth/dashboard/home'
     | '/_auth/dashboard/my-sessions'
     | '/_auth/session/$sessionId'
@@ -519,12 +543,17 @@ export const routeTree = rootRoute
       "filePath": "_auth/dashboard.tsx",
       "parent": "/_auth",
       "children": [
+        "/_auth/dashboard/create-session",
         "/_auth/dashboard/home",
         "/_auth/dashboard/my-sessions"
       ]
     },
     "/vote-registered/$session": {
       "filePath": "vote-registered/$session.tsx"
+    },
+    "/_auth/dashboard/create-session": {
+      "filePath": "_auth/dashboard/create-session.ts",
+      "parent": "/_auth/dashboard"
     },
     "/_auth/dashboard/home": {
       "filePath": "_auth/dashboard/home.ts",

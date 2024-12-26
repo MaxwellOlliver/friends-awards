@@ -16,6 +16,9 @@ if (!rootElement.innerHTML) {
         position="top-center"
         toastOptions={{
           duration: 5000,
+          custom: {
+            duration: 5000,
+          },
         }}
       />
     </StrictMode>

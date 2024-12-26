@@ -1,12 +1,23 @@
-import { createRouter, RouterProvider } from "@tanstack/react-router";
+import {
+  createRouteMask,
+  createRouter,
+  RouterProvider,
+} from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { useAuthStore } from "./store/auth-store";
+
+const createSessionMask = createRouteMask({
+  routeTree,
+  from: "/dashboard/create-session",
+  to: "/dashboard/my-sessions",
+});
 
 const router = createRouter({
   routeTree,
   context: {
     auth: undefined,
   },
+  routeMasks: [createSessionMask],
 });
 
 declare module "@tanstack/react-router" {

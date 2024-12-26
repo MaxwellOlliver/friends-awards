@@ -92,7 +92,9 @@ export const PageModal = ({
         className="w-full z-10 bg-background-light h-[calc(100dvh-4rem)] overflow-y-auto flex justify-center"
         ref={contentRef}
       >
-        <div className="px-8 py-12">{internalIsOpen && children}</div>
+        <div className="px-8 py-12 w-full flex justify-center">
+          {internalIsOpen && children}
+        </div>
       </div>
     </div>
   );

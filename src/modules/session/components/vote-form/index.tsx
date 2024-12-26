@@ -51,7 +51,7 @@ export const VoteForm = ({ onVoteRegistered }: VoteFormProps) => {
           <button
             key={nominee}
             className={cn(
-              "w-full flex items-center rounded-md text-white px-4 py-2 gap-2 hover:bg-[#202020] transition-colors min-w-0",
+              "w-full flex items-center rounded-md text-white px-4 outline-none py-2 gap-2 hover:bg-[#202020] transition-colors min-w-0",
               {
                 "bg-white text-black hover:bg-white":
                   selectedNominee === nominee,
