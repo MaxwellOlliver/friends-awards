@@ -1,7 +1,7 @@
 import { Categories } from "@/types/categories";
 import { GameData, Session } from "../../types/session";
 
-export type SocketUser = {
+export type Participant = {
   id: string;
   name: string;
   isHost: boolean;
@@ -16,7 +16,6 @@ export type SessionContextType = {
   session: Session | null;
   gameData: GameData | null;
   categories: Categories;
-  participants: SocketUser[];
-  connectedParticipants: string[];
+  participants: Participant[];
   registerGameAction: UpdateGameDataFn;
 };

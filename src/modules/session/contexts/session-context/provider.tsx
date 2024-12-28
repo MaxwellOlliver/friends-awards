@@ -10,7 +10,8 @@ import { Loader } from "@/components/Loader";
 import { UpdateGameDataFn } from "./types";
 import { gameDataService } from "../../services/game-data";
 import { Category } from "@/types/categories";
-import { User } from "@/modules/common/types/account";
+import { socket } from "@/lib/socket";
+import { SocketEvents } from "../../constants/socket-events";
 
 export const SessionProvider = ({
   children,
@@ -18,6 +19,7 @@ export const SessionProvider = ({
   children: React.ReactNode;
 }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [isSocketReady, setIsSocketReady] = useState(false);
   const [session, setSession] = useState<Session | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [participants, setParticipants] = useState<SocketUser[]>([
@@ -43,10 +45,6 @@ export const SessionProvider = ({
     },
   ]);
   const [gameData, setGameData] = useState<GameData | null>(null);
-  const [connectedParticipants, setConnectedParticipants] = useState<string[]>([
-    "5455a36e-1beb-4cd3-985e-5cb7ea898e77",
-    "5455a36e-1beb-4cd3-985e-5cb7ea898e78",
-  ]);
 
   const params = useParams({
     from: "/_auth/session/$sessionId/_lobby",
@@ -95,6 +93,22 @@ export const SessionProvider = ({
     fetchSession();
   }, []);
 
+  useEffect(() => {
+    socket.connect();
+
+    socket.on(SocketEvents.CONNECT, () => {
+      setIsSocketReady(true);
+    });
+
+    socket.on(SocketEvents.DISCONNECT, () => {
+      setIsSocketReady(false);
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   const registerGameAction: UpdateGameDataFn = async (
     action,
     categoryId?: string
@@ -120,7 +134,6 @@ export const SessionProvider = ({
   return (
     <SessionContext.Provider
       value={{
-        connectedParticipants,
         session,
         gameData,
         categories,
@@ -128,14 +141,14 @@ export const SessionProvider = ({
         participants,
       }}
     >
-      {/* {isLoading ? (
+      {isLoading && isSocketReady ? (
         <div className="flex items-center gap-4">
           <Loader />
           <span>Carregando dados da sessão...</span>
         </div>
-      ) : ( */}
-      {children}
-      {/* )} */}
+      ) : (
+        children
+      )}
     </SessionContext.Provider>
   );
 };

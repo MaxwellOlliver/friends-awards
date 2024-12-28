@@ -1,6 +1,6 @@
 import { Categories } from "@/types/categories";
 import { GameData, Session } from "../../types/session";
-import { User } from "@/modules/common/types/account";
+import { SocketUser } from "../../contexts/session-context";
 
 interface CreateSessionPayload {
   name: string;
@@ -17,7 +17,7 @@ export interface SessionServiceDescriptor {
   getSessionGameData: (id: string) => Promise<GameData>;
   getSessions: () => Promise<Session[]>;
   getCategories: (id: string) => Promise<Categories>;
-  getParticipants: (id: string) => Promise<User[]>;
+  getParticipants: (id: string) => Promise<SocketUser[]>;
   updateSession: (id: string, data: any) => Promise<any>;
   joinSession: (code: string) => Promise<JoinSessionResponse>;
 }

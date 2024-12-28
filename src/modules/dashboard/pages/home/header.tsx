@@ -9,6 +9,7 @@ import { useRef, useState } from "react";
 
 export const Header = () => {
   const [code, setCode] = useState("");
+  const [isJoining, setIsJoining] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -28,6 +29,8 @@ export const Header = () => {
       return;
     }
 
+    setIsJoining(true);
+
     const [error, data] = await tryCatch(sessionService.joinSession(code));
 
     if (error) {
@@ -35,6 +38,7 @@ export const Header = () => {
         title: "Erro ao entrar na sessão",
         error,
       });
+      setIsJoining(false);
       return;
     }
 
@@ -67,12 +71,14 @@ export const Header = () => {
           value={code}
           onChange={handleChange}
           ref={inputRef}
+          disabled={isJoining}
         />
         <Button
           color="primary"
           className="!ring-offset-secondary"
           aria-label="Entrar na sessão"
           onClick={handleJoinSession}
+          isLoading={isJoining}
         >
           <ArrowRight className="size-5" />
         </Button>
