@@ -12,7 +12,7 @@ export const ParticipantsList = () => {
   const [canEmote, setCanEmote] = useState(true);
 
   const navigate = useNavigate();
-  const { connectedParticipants, participants } = useSession();
+  const { gameData, participants } = useSession();
   const user = useAuthStore((state) => state.user);
 
   const timeoutMapRef = useRef<Map<string, NodeJS.Timeout>>(new Map());
@@ -59,7 +59,9 @@ export const ParticipantsList = () => {
   return (
     <div className="flex flex-col gap-2 pr-2 overflow-y-auto max-h-96 h-96 pt-4">
       {participants.map((participant, index) => {
-        const isUserConnected = connectedParticipants.includes(participant.id);
+        const isUserConnected = gameData?.connectedParticipants.includes(
+          participant.id
+        );
         const isMe = participant.id === user?.id;
 
         return (

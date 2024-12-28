@@ -20,7 +20,7 @@ import { useSession } from "@/modules/session/contexts/session-context";
 import { CategoriesList } from "@/modules/session/components/categories-list";
 
 export const Host = () => {
-  const { gameData, connectedParticipants, participants } = useSession();
+  const { gameData, participants } = useSession();
   const params = useParams({
     from: "/_auth/session/$sessionId/_lobby/host",
   });
@@ -35,7 +35,7 @@ export const Host = () => {
     },
     {
       key: "participants",
-      title: `Participantes (${connectedParticipants.length}/${participants.length})`,
+      title: `Participantes (${gameData?.connectedParticipants.length}/${participants.length})`,
       icon: Users,
       content: <ParticipantsList />,
       forceRender: true,

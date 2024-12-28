@@ -14,7 +14,7 @@ import { addToast } from "@/lib/toast";
 import { Button } from "@/components/Button";
 
 export const Participant = () => {
-  const { connectedParticipants, participants } = useSession();
+  const { participants, gameData } = useSession();
 
   const [mustVote, setMustVote] = useState(false);
 
@@ -25,7 +25,7 @@ export const Participant = () => {
   const tabs: TabsData[] = [
     {
       key: "participants",
-      title: `Participantes (${connectedParticipants.length}/${participants.length})`,
+      title: `Participantes (${gameData?.connectedParticipants.length}/${participants.length})`,
       icon: Users,
       content: <ParticipantsList />,
       forceRender: true,

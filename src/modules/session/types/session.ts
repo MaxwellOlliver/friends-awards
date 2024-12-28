@@ -18,7 +18,7 @@ export type GameData = {
   id: string;
   sessionId: string;
   state: string;
-  connectedUsers: string[];
+  connectedParticipants: string[];
   registeredVotes: Record<string, string[]>;
   createdAt: string;
 };

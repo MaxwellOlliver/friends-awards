@@ -12,6 +12,7 @@ import { gameDataService } from "../../services/game-data";
 import { Category } from "@/types/categories";
 import { socket } from "@/lib/socket";
 import { SocketEvents } from "../../constants/socket-events";
+import { io } from "socket.io-client";
 
 export const SessionProvider = ({
   children,
@@ -94,6 +95,14 @@ export const SessionProvider = ({
   }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      return;
+    }
+
+    socket.auth = { token };
+
     socket.connect();
 
     socket.on(SocketEvents.CONNECT, () => {
@@ -141,7 +150,7 @@ export const SessionProvider = ({
         participants,
       }}
     >
-      {isLoading && isSocketReady ? (
+      {isLoading && !isSocketReady ? (
         <div className="flex items-center gap-4">
           <Loader />
           <span>Carregando dados da sessão...</span>
