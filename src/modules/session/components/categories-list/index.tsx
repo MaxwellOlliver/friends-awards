@@ -1,17 +1,10 @@
 import { Accordion } from "@/components/Accordion";
 import { Tooltip } from "@/components/Tooltip";
-import { categories } from "@/constants/categories";
-import { ChevronRight, Clock, ClockArrowUp, Vote } from "lucide-react";
+import { ChevronRight, Clock } from "lucide-react";
 import { useSession } from "../../contexts/session-context";
-import { useAuthStore } from "@/store/auth-store";
 
 export const CategoriesList = () => {
-  const { participants } = useSession();
-  const user = useAuthStore((state) => state.user);
-
-  const isHost = participants.find(
-    (participant) => participant.id === user?.id
-  )?.isHost;
+  const { categories } = useSession();
 
   return (
     <div className="flex flex-col gap-4 w-full h-96 overflow-y-auto pr-2">
@@ -21,7 +14,7 @@ export const CategoriesList = () => {
           className="flex flex-col bg-background-light p-4 rounded-md"
         >
           <div className="flex items-center gap-2 justify-between">
-            <span className="text-xl font-bold ">{category.name}</span>
+            <span className="text-xl font-bold ">{category.title}</span>
             <Tooltip text="Votação realizada" position="left">
               {/* <Vote className="text-success size-4" /> */}
               <Clock className="text-gray-400 size-4" />
@@ -43,10 +36,10 @@ export const CategoriesList = () => {
             <div className="pt-4 flex flex-wrap gap-2">
               {category.nominees.map((nominee) => (
                 <div
-                  key={nominee}
+                  key={nominee.id}
                   className="flex items-center gap-2 p-2 bg-secondary bg-opacity-15 rounded-md text-sm"
                 >
-                  <span>{nominee}</span>
+                  <span>{nominee.title}</span>
                 </div>
               ))}
             </div>

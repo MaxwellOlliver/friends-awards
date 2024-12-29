@@ -2,7 +2,7 @@ import { cn } from "@/utils/cn";
 import { Info, LucideIcon, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { tv } from "tailwind-variants";
-import { getErrorResponse } from "./axios";
+import { getErrorResponse } from "../http/axios";
 import { AxiosError } from "axios";
 
 interface AddToastProps {

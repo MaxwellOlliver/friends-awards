@@ -1,7 +1,7 @@
-import { api } from "@/lib/axios";
+import { api } from "@/http/axios";
 import { AuthServiceDescriptor } from "./types";
 
-const BASE_URL = "/authenticate";
+const BASE_URL = "/participants/password";
 
 export const authService = {
   login: async (data) => {

@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import { api } from "@/http/axios";
 import { AccountServiceDescriptor } from "./types";
 
 const BASE_URL = "/participants";

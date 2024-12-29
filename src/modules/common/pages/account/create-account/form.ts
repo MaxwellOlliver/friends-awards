@@ -1,14 +1,14 @@
 import { YupCore } from "@/lib/yup";
 
 export type CreateAccountFormData = {
-  name: string;
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
 };
 
 export const schema = YupCore.object<CreateAccountFormData>().shape({
-  name: YupCore.string().required(),
+  username: YupCore.string().required(),
   email: YupCore.string().email().required(),
   password: YupCore.string()
     .min(8, "Senha deve ter no mínimo 8 caracteres")

@@ -1,7 +1,7 @@
 import { User } from "../../types/account";
 
 export interface CreateAccountPayload {
-  name: string;
+  username: string;
   email: string;
   password: string;
 }

@@ -4,7 +4,7 @@ export interface LoginPayload {
 }
 
 export interface LoginResponse {
-  access_token: string;
+  accessToken: string;
 }
 
 export interface AuthServiceDescriptor {

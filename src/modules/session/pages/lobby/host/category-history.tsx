@@ -1,11 +1,13 @@
-import { useSessionStore } from "@/store/session-store";
+import { useSession } from "@/modules/session/contexts/session-context";
 import { cn } from "@/utils/cn";
 import { ChevronLeft } from "lucide-react";
 import { useRef } from "react";
 
 export const CategoryHistory = () => {
-  const { currentCategory, categories } = useSessionStore();
+  const { categories } = useSession();
   const hasFinishedFirstAnimation = useRef(false);
+
+  const currentCategory = categories[0].id;
 
   const currentCategoryIndex = categories.findIndex(
     (category) => category.id === currentCategory
@@ -59,7 +61,7 @@ export const CategoryHistory = () => {
                   "size-3 bg-white rounded-full flex items-center justify-center"
                 )}
               ></div>
-              <span className="text-sm ml-4">{category.name}</span>
+              <span className="text-sm ml-4">{category.title}</span>
               {currentCategory === category.id && (
                 <ChevronLeft className="size-4" />
               )}

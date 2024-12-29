@@ -1,4 +1,4 @@
-import { api, setupToken } from "@/lib/axios";
+import { api } from "@/http/axios";
 import { LoginFormData } from "@/modules/common/pages/login/form";
 import { accountService } from "@/modules/common/services/account-service";
 import { authService } from "@/modules/common/services/auth-service";
@@ -28,7 +28,7 @@ export const useAuthStore = create<AuthStore>((set) => {
     login: async (data) => {
       const response = await authService.login(data);
 
-      setupToken(response.access_token);
+      localStorage.setItem("token", response.accessToken);
 
       const { participant } = await accountService.getLoggedProfile();
 
@@ -36,7 +36,6 @@ export const useAuthStore = create<AuthStore>((set) => {
         user: participant,
         isAuthenticated: true,
       });
-      localStorage.setItem("token", response.access_token);
     },
     logout: () => {
       set({ user: null, isAuthenticated: false });

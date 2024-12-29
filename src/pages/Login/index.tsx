@@ -41,7 +41,7 @@ export const Login = () => {
     }
     console.log(loginData);
     navigate({
-      to: search.redirect ?? "/menu",
+      to: search.redirect ?? "/dashboard/home",
     });
   };
 

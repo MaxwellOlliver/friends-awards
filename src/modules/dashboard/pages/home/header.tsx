@@ -45,7 +45,7 @@ export const Header = () => {
     navigate({
       to: "/session/$sessionId/participant",
       params: {
-        sessionId: data.sessionId,
+        sessionId: data.session.id,
       },
     });
   };

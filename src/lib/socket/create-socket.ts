@@ -18,6 +18,8 @@ export function createSocket<TEventDataMap extends Record<string, any>>({
     socket.onmessage = (event) => {
       const eventData = JSON.parse(event.data);
 
+      console.log("[web-socket] Message:", eventData);
+
       if (!eventData.event || !eventData.data) {
         console.error("Invalid event data received.");
         return;
@@ -76,6 +78,22 @@ export function createSocket<TEventDataMap extends Record<string, any>>({
     }
   }
 
+  function off<TEvent extends keyof TEventDataMap>(
+    event: TEvent,
+    callback: (data: TEventDataMap[TEvent]) => void
+  ) {
+    const eventName = event as string;
+
+    const eventListeners = listeners.get(eventName);
+
+    if (eventListeners) {
+      listeners.set(
+        eventName,
+        eventListeners.filter((listener) => listener !== callback)
+      );
+    }
+  }
+
   function emit<TEvent extends keyof TEventDataMap>(
     event: TEvent,
     data: TEventDataMap[TEvent]
@@ -103,7 +121,7 @@ export function createSocket<TEventDataMap extends Record<string, any>>({
     connect,
     disconnect,
     on,
+    off,
     emit,
-    listeners,
   };
 }

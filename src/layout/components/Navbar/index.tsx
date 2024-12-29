@@ -15,7 +15,7 @@ export const Navbar = () => {
   return (
     <div className="flex items-center justify-end w-full h-20 px-4 ">
       <div className="flex items-center gap-4">
-        <span>{user?.name}</span>
+        <span>{user?.username}</span>
         <div className="flex items-center justify-center border border-white rounded-full p-1.5">
           <User className="size-5" />
         </div>

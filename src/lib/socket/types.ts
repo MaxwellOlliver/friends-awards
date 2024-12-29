@@ -1,6 +1,6 @@
 export interface SocketEventMap {
-  connect: undefined;
-  disconnect: undefined;
+  connect: void;
+  disconnect: void;
 }
 
 export interface CreateSocketParams {
@@ -15,9 +15,12 @@ export type Socket<TEventDataMap extends Record<string, any>> = {
     event: TEvent,
     callback: (data: TEventDataMap[TEvent]) => void
   ) => void;
+  off: <TEvent extends keyof TEventDataMap>(
+    event: TEvent,
+    callback: (data: TEventDataMap[TEvent]) => void
+  ) => void;
   emit: <TEvent extends keyof TEventDataMap>(
     event: TEvent,
     data: TEventDataMap[TEvent]
   ) => void;
-  listeners?: Map<string, ((data?: any) => void)[]>;
 };

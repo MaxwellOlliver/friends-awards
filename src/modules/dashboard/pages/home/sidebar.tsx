@@ -37,7 +37,7 @@ export const Sidebar = () => {
             className="size-10 rounded-full"
             about="Avatar - credits to https://www.freepik.com/author/catalyststuff"
           />
-          <span>{user?.name}</span>
+          <span>{user?.username}</span>
         </div>
         <button onClick={handleLogout} aria-label="Sair">
           <LogOut className="size-5 text-error cursor-pointer" />

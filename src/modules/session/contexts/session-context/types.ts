@@ -1,9 +1,8 @@
-import { Categories } from "@/types/categories";
-import { GameData, Session } from "../../types/session";
+import { Category, GameData, Session } from "../../types/session";
 
 export type Participant = {
   id: string;
-  name: string;
+  username: string;
   isHost: boolean;
 };
 
@@ -15,7 +14,7 @@ export type UpdateGameDataFn = {
 export type SessionContextType = {
   session: Session | null;
   gameData: GameData | null;
-  categories: Categories;
+  categories: Category[];
   participants: Participant[];
   registerGameAction: UpdateGameDataFn;
 };

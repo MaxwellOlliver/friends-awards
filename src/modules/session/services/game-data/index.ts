@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import { api } from "@/http/axios";
 import { GameDataDescriptor } from "./types";
 
 export const gameDataService = {

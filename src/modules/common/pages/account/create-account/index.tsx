@@ -53,7 +53,7 @@ export const CreateAccount = () => {
     }
 
     navigate({
-      to: "/menu",
+      to: "/dashboard/home",
     });
   };
 
@@ -74,9 +74,9 @@ export const CreateAccount = () => {
             <Input
               label="Nome de usuário"
               placeholder="NoobMaster69"
-              {...form.register("name")}
+              {...form.register("username")}
               iconLeft={User}
-              error={form.formState.errors.name?.message}
+              error={form.formState.errors.username?.message}
               disabled={isLoading}
             />
             <Input
