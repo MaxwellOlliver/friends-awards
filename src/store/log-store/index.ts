@@ -11,16 +11,7 @@ interface LogStore {
 }
 
 export const useLogStore = create<LogStore>((set) => ({
-  logs: [
-    {
-      text: "Edu entrou na sala",
-      createdAt: new Date(),
-    },
-    {
-      text: "Votação começou na categoria Friend do Ano",
-      createdAt: new Date(),
-    },
-  ],
+  logs: [],
   addLog: (log) =>
     set(({ logs }) => ({
       logs: [

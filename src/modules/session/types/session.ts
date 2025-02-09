@@ -25,10 +25,14 @@ export type GameData = {
   sessionId?: string;
   state?: GameDataState;
   connectedParticipants?: string[];
-  registeredVotes?: Record<string, string[]>;
+  registeredVotes?: Record<
+    string,
+    { participantId: string; nomineeId: string }[]
+  >;
+  currentCategory?: string;
 };
 
-export type Nominees = {
+export type Nominee = {
   id: string;
   title: string;
   votes: 0;
@@ -38,5 +42,5 @@ export type Category = {
   id: string;
   title: string;
   description: string;
-  nominees: Nominees[];
+  nominees: Nominee[];
 };

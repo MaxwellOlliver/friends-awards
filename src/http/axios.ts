@@ -1,10 +1,13 @@
+import { authService } from "@/modules/common/services/auth-service";
 import { useAuthStore } from "@/store/auth-store";
-import { redirect } from "@tanstack/react-router";
 import axios, { AxiosError } from "axios";
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
+
+const pendingRequests = new Set<() => void>();
+let isRefreshing = false;
 
 export const setupToken = (token: string) => {
   api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -17,14 +20,38 @@ export const getErrorResponse = (error: AxiosError) => {
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
-    if (error.response?.status === 401) {
-      useAuthStore.getState().logout();
-      throw redirect({
-        to: "/",
-        search: {
-          redirect: location.href,
-        },
-      });
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve) => {
+          pendingRequests.add(() => resolve(api(originalRequest)));
+        });
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      return authService
+        .refreshToken()
+        .then((res) => {
+          localStorage.setItem("token", res.accessToken);
+          originalRequest.headers["Authorization"] =
+            `Bearer ${res.accessToken}`;
+
+          pendingRequests.forEach((request) => request());
+          pendingRequests.clear();
+
+          return api(originalRequest);
+        })
+        .catch((error) => {
+          useAuthStore.getState().logout();
+
+          return Promise.reject(error);
+        })
+        .finally(() => {
+          isRefreshing = false;
+        });
     }
 
     return Promise.reject(error);

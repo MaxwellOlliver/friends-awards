@@ -1,6 +1,5 @@
 import { Loader } from "@/components/Loader";
 import { LayoutPage } from "@/layout/components/LayoutPage";
-import { useParams } from "@tanstack/react-router";
 import { ParticipantsList } from "@/modules/session/components/participants-list";
 import { useSession } from "@/modules/session/contexts/session-context";
 import { TabsData } from "@/components/Tabs/types";
@@ -8,24 +7,37 @@ import { Medal, Users, Vote } from "lucide-react";
 import { CategoriesList } from "@/modules/session/components/categories-list";
 import { Tabs } from "@/components/Tabs";
 import { PageModal } from "@/components/PageModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { VoteForm } from "@/modules/session/components/vote-form";
 import { addToast } from "@/lib/toast";
 import { Button } from "@/components/Button";
+import { CustomSocketEventMap, socket } from "@/http/socket";
+import { SocketEvents } from "@/modules/session/constants/socket-events";
 
 export const Participant = () => {
-  const { participants, gameData } = useSession();
+  const { participants, gameData, session, registerGameAction } = useSession();
 
   const [mustVote, setMustVote] = useState(false);
 
-  const params = useParams({
-    from: "/_auth/session/$sessionId/_lobby/participant",
-  });
+  useEffect(() => {
+    function handleVotingStarted(
+      data: CustomSocketEventMap[SocketEvents.VOTING_STARTED]
+    ) {
+      registerGameAction("START_VOTING", data.category.id);
+      setMustVote(true);
+    }
+
+    socket.on(SocketEvents.VOTING_STARTED, handleVotingStarted);
+
+    return () => {
+      socket.off(SocketEvents.VOTING_STARTED, handleVotingStarted);
+    };
+  }, []);
 
   const tabs: TabsData[] = [
     {
       key: "participants",
-      title: `Participantes (${gameData?.connectedParticipants.length}/${participants.length})`,
+      title: `Participantes (${gameData?.connectedParticipants?.length}/${participants.length})`,
       icon: Users,
       content: <ParticipantsList />,
       forceRender: true,
@@ -44,11 +56,10 @@ export const Participant = () => {
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="flex flex-col p-4 w-full">
           <h1 className="text-xl ">
-            Sessão{" "}
-            <span className="text-secondary-500">{params.sessionId}</span>
+            Sessão <span className="text-secondary-500">#{session!.pin}</span>
           </h1>
           <h1 className="text-4xl font-bold mb-8 break-words">
-            Game of the year
+            {session!.name}
           </h1>
 
           <h1 className="text-lg">Próxima categoria</h1>
@@ -56,7 +67,7 @@ export const Participant = () => {
 
           <div className="flex items-center gap-4 mt-12">
             <Loader className="size-4" />
-            <span>Aguardando host iniciar votação...</span>
+            <span>Aguardando próxima categoria...</span>
           </div>
 
           <div className="mt-12">

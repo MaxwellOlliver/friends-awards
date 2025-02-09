@@ -2,6 +2,11 @@ import { createSocket, SocketEventMap } from "@/lib/socket";
 import { emotes } from "@/modules/session/constants/emotes";
 import { SocketEvents } from "@/modules/session/constants/socket-events";
 import { Participant } from "@/modules/session/contexts/session-context/types";
+import {
+  Category,
+  GameDataState,
+  Nominee,
+} from "@/modules/session/types/session";
 
 export interface CustomSocketEventMap extends SocketEventMap {
   [SocketEvents.JOIN_SESSION]: {
@@ -9,6 +14,8 @@ export interface CustomSocketEventMap extends SocketEventMap {
   };
   [SocketEvents.CONNECTED_USERS]: {
     participants: string[];
+    userId: string;
+    action: "connect" | "disconnect";
   };
   [SocketEvents.NEW_PARTICIPANT]: {
     participant: Participant;
@@ -17,6 +24,17 @@ export interface CustomSocketEventMap extends SocketEventMap {
     from: string;
     emote: (typeof emotes)[number]["code"];
     sessionId: string;
+  };
+  [SocketEvents.VOTING_STARTED]: {
+    category: Category;
+  };
+  [SocketEvents.SESSION_STATE_CHANGED]: {
+    state: GameDataState;
+  };
+  [SocketEvents.VOTE_SUBMITTED]: {
+    category: Category;
+    participantId: string;
+    nominee: Nominee;
   };
 }
 

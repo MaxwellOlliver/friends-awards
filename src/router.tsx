@@ -1,16 +1,12 @@
-import {
-  createRouteMask,
-  createRouter,
-  RouterProvider,
-} from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
-import { useAuthStore } from "./store/auth-store";
+import { createRouteMask, createRouter, RouterProvider } from '@tanstack/react-router'
+import { routeTree } from './routeTree.gen'
+import { useAuthStore } from './store/auth-store'
 
 const createSessionMask = createRouteMask({
   routeTree,
-  from: "/dashboard/create-session",
-  to: "/dashboard/my-sessions",
-});
+  from: '/dashboard/create-session',
+  to: '/dashboard/my-sessions',
+})
 
 const router = createRouter({
   routeTree,
@@ -18,16 +14,16 @@ const router = createRouter({
     auth: undefined,
   },
   routeMasks: [createSessionMask],
-});
+})
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface Register {
-    router: typeof router;
+    router: typeof router
   }
 }
 
 export function RouterApp() {
-  const auth = useAuthStore();
+  const auth = useAuthStore()
 
-  return <RouterProvider router={router} context={{ auth }} />;
+  return <RouterProvider router={router} context={{ auth }} />
 }

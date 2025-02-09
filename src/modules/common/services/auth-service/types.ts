@@ -9,4 +9,5 @@ export interface LoginResponse {
 
 export interface AuthServiceDescriptor {
   login: (payload: LoginPayload) => Promise<LoginResponse>;
+  refreshToken: () => Promise<LoginResponse>;
 }

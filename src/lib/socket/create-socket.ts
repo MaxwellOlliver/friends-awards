@@ -7,7 +7,7 @@ export function createSocket<TEventDataMap extends Record<string, any>>({
   let socket: WebSocket | null = autoConnect
     ? new WebSocket(typeof url === "function" ? url() : url)
     : null;
-  const listeners = new Map<string, ((data?: any) => void)[]>();
+  const listeners = new Map<string, Set<(data?: any) => void>>();
 
   function setupSocketListeners() {
     if (!socket) {
@@ -68,13 +68,13 @@ export function createSocket<TEventDataMap extends Record<string, any>>({
     const eventName = event as string;
 
     if (!listeners.has(eventName)) {
-      listeners.set(eventName, []);
+      listeners.set(eventName, new Set());
     }
 
     const eventListeners = listeners.get(eventName);
 
     if (eventListeners) {
-      eventListeners.push(callback);
+      eventListeners.add(callback);
     }
   }
 
@@ -87,10 +87,13 @@ export function createSocket<TEventDataMap extends Record<string, any>>({
     const eventListeners = listeners.get(eventName);
 
     if (eventListeners) {
-      listeners.set(
-        eventName,
-        eventListeners.filter((listener) => listener !== callback)
-      );
+      if (eventListeners) {
+        eventListeners.delete(callback);
+
+        if (eventListeners.size === 0) {
+          listeners.delete(eventName);
+        }
+      }
     }
   }
 

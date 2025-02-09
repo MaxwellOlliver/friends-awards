@@ -17,6 +17,7 @@ import { gameDataService } from "../../services/game-data";
 import { CustomSocketEventMap, socket } from "@/http/socket";
 import { SocketEvents } from "../../constants/socket-events";
 import { useAuthStore } from "@/store/auth-store";
+import { useLogStore } from "@/store/log-store";
 
 export const SessionProvider = ({
   children,
@@ -31,6 +32,7 @@ export const SessionProvider = ({
   const [gameData, setGameData] = useState<GameData>({
     state: GameDataState.WAITING,
   });
+  const _addLog = useLogStore((state) => state.addLog);
 
   const params = useParams({
     from: "/_auth/session/$sessionId/_lobby",
@@ -42,12 +44,22 @@ export const SessionProvider = ({
   });
   const user = useAuthStore((state) => state.user);
 
+  const addLog = (message: string) => {
+    const isHost = session?.hostId === user?.id;
+
+    if (!isHost) return;
+
+    _addLog(message);
+  };
+
   const fetchSessionData = async () => {
     const { session, categories, pin } = await sessionService.getSession(
       params.sessionId
     );
 
-    if (![SessionState.CREATED, SessionState.OPENED].includes(session.state)) {
+    if (
+      [SessionState.CANCELLED, SessionState.FINISHED].includes(session.state)
+    ) {
       navigate({
         to: "/dashboard/home",
       });
@@ -114,29 +126,88 @@ export const SessionProvider = ({
   useEffect(() => {
     if (!isSocketReady) return;
 
-    function handleParticipantJoined(
+    function handleParticipantConnect(
       data: CustomSocketEventMap[SocketEvents.CONNECTED_USERS]
     ) {
       setGameData({
         ...gameData,
         connectedParticipants: data.participants,
       });
+
+      const socketUser = participants.find(
+        (participant) => participant.id === data.userId
+      );
+
+      if (data.action === "disconnect") {
+        addLog(`${socketUser?.username} está offline`);
+      } else {
+        addLog(`${socketUser?.username} está online`);
+      }
     }
 
     function handleNewParticipant(
       data: CustomSocketEventMap[SocketEvents.NEW_PARTICIPANT]
     ) {
       setParticipants([...participants, data.participant]);
+      addLog(`${data.participant.username} entrou na sessão`);
     }
 
-    socket.on(SocketEvents.CONNECTED_USERS, handleParticipantJoined);
+    function handleSessionStateChanged(
+      data: CustomSocketEventMap[SocketEvents.SESSION_STATE_CHANGED]
+    ) {
+      setGameData((p) => ({
+        ...p,
+        state: data.state,
+      }));
+      addLog(`Estado da sessão alterado para ${data.state}`);
+    }
+
+    function handleVoteSubmitted(
+      data: CustomSocketEventMap[SocketEvents.VOTE_SUBMITTED]
+    ) {
+      const participant = participants.find(
+        (participant) => participant.id === data.participantId
+      );
+
+      addLog(`${participant?.username} votou!`);
+
+      setGameData((prev) => {
+        let registeredVotes = prev.registeredVotes;
+
+        const vote = {
+          nomineeId: data.nominee.id,
+          participantId: data.participantId,
+        };
+
+        if (!registeredVotes) {
+          registeredVotes = {};
+        }
+
+        if (!registeredVotes[data.category.id]) {
+          registeredVotes[data.category.id] = [];
+        }
+
+        registeredVotes[data.category.id].push(vote);
+
+        return {
+          ...prev,
+          registeredVotes,
+        };
+      });
+    }
+
+    socket.on(SocketEvents.CONNECTED_USERS, handleParticipantConnect);
     socket.on(SocketEvents.NEW_PARTICIPANT, handleNewParticipant);
+    socket.on(SocketEvents.SESSION_STATE_CHANGED, handleSessionStateChanged);
+    socket.on(SocketEvents.VOTE_SUBMITTED, handleVoteSubmitted);
 
     return () => {
-      socket.off(SocketEvents.CONNECTED_USERS, handleParticipantJoined);
+      socket.off(SocketEvents.CONNECTED_USERS, handleParticipantConnect);
       socket.off(SocketEvents.NEW_PARTICIPANT, handleNewParticipant);
+      socket.off(SocketEvents.SESSION_STATE_CHANGED, handleSessionStateChanged);
+      socket.off(SocketEvents.VOTE_SUBMITTED, handleVoteSubmitted);
     };
-  }, [isSocketReady, gameData]);
+  }, [isSocketReady, gameData, participants]);
 
   useEffect(() => {
     socket.connect();
@@ -167,7 +238,11 @@ export const SessionProvider = ({
         if (!categoryId)
           throw new Error("CategoryId is required to start voting");
 
-        await gameDataService.startVoting(session.id, categoryId);
+        setGameData((prev) => ({
+          ...prev,
+          //state: GameDataState.VOTING,
+          currentCategory: categoryId,
+        }));
         return;
       case "FINISH_VOTING":
         await gameDataService.finishVoting(session.id);
