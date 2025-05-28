@@ -5,9 +5,9 @@ export const buttonVariants = tv({
     icon: "size-4",
     base: [
       "text-white",
-      "text-base",
+      "text-nowrap",
+      "min-w-fit",
       "px-4",
-      "py-2",
       "h-fit",
       "relative",
       "overflow-hidden",
@@ -24,6 +24,7 @@ export const buttonVariants = tv({
       "focus:ring-2",
       "focus:ring-offset-2",
       "dark:ring-offset-background",
+      "disabled:pointer-events-none",
     ],
   },
   variants: {
@@ -42,11 +43,11 @@ export const buttonVariants = tv({
       },
       md: {
         icon: "size-4",
-        base: "px-4 py-4 text-sm",
+        base: "px-4 py-3 text-sm",
       },
       lg: {
         icon: "size-5",
-        base: "px-6 py-5 text-md",
+        base: "px-6 py-5 text-base",
       },
     },
     variant: {
@@ -54,10 +55,11 @@ export const buttonVariants = tv({
       solid: "",
       ghost: {
         base: [
-          "bg-gray-200",
-          "text-slate-950",
-          "hover:bg-gray-300",
-          "active:bg-gray-400",
+          "bg-white",
+          "bg-opacity-5",
+          "text-white",
+          "hover:bg-opacity-15",
+          "active:bg-opacity-25",
           "focus:ring-gray-300",
         ],
       },

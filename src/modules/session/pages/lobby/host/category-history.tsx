@@ -1,0 +1,73 @@
+import { useSession } from "@/modules/session/contexts/session-context";
+import { cn } from "@/utils/cn";
+import { ChevronLeft } from "lucide-react";
+import { useRef } from "react";
+
+export const CategoryHistory = () => {
+  const { categories } = useSession();
+  const hasFinishedFirstAnimation = useRef(false);
+
+  const currentCategory = categories[0].id;
+
+  const currentCategoryIndex = categories.findIndex(
+    (category) => category.id === currentCategory
+  );
+  const firstIndex = Math.max(0, currentCategoryIndex - 1);
+
+  return (
+    <div className="flex flex-col items-end relative gap-4 h-fit">
+      <div
+        className="w-[2px] absolute top-0 left-[5px] animate-h-grow bg-[#444444]"
+        style={{ animationDuration: "1000ms", animationFillMode: "forwards" }}
+      ></div>
+      {categories
+        .slice(
+          firstIndex,
+          firstIndex === 0
+            ? 2
+            : Math.min(categories.length, currentCategoryIndex + 2)
+        )
+        .map((category, index) => {
+          return (
+            <div
+              key={category.id}
+              className={cn(
+                "flex items-center w-full z-20 animate-slide-left opacity-0",
+                {
+                  "text-[#555555] [&_div]:bg-[#555555]":
+                    currentCategory !== category.id,
+                  "text-secondary [&_div]:bg-secondary":
+                    category.id === currentCategory,
+                }
+              )}
+              style={{
+                animationDelay: !hasFinishedFirstAnimation.current
+                  ? `${200 + index * 200}ms`
+                  : undefined,
+                animationFillMode: "forwards",
+              }}
+              onAnimationEnd={(e) => {
+                if (
+                  index === 2 &&
+                  !hasFinishedFirstAnimation.current &&
+                  e.animationName === "slide-left"
+                ) {
+                  hasFinishedFirstAnimation.current = true;
+                }
+              }}
+            >
+              <div
+                className={cn(
+                  "size-3 bg-white rounded-full flex items-center justify-center"
+                )}
+              ></div>
+              <span className="text-sm ml-4">{category.title}</span>
+              {currentCategory === category.id && (
+                <ChevronLeft className="size-4" />
+              )}
+            </div>
+          );
+        })}
+    </div>
+  );
+};

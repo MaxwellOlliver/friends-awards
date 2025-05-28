@@ -73,14 +73,14 @@ export const Results = () => {
             autorun={{ speed: 1, duration: 1 }}
             decorateOptions={(opt) => ({
               ...opt,
-              colors: ["#FFD700", "#ff9100", "#ff7300"],
+              colors: ["#695BFF", "#4334e2", "#cecaf8"],
             })}
           />
           <Pride
             autorun={{ speed: 20 }}
             decorateOptions={(opt) => ({
               ...opt,
-              colors: ["#FFD700", "#ff9100", "#ff7300"],
+              colors: ["#695BFF", "#4334e2", "#cecaf8"],
             })}
           />
         </>

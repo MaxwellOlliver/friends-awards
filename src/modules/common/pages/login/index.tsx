@@ -39,8 +39,6 @@ export const Login = () => {
       setIsLoading(true);
       const [error] = await tryCatch(login(data), [AxiosError]);
 
-      console.log(error);
-
       if (error) {
         addToast({
           title: "Erro ao fazer login",
@@ -54,7 +52,7 @@ export const Login = () => {
       }
 
       navigate({
-        to: search.redirect ?? "/menu",
+        to: search.redirect ?? "/dashboard/home",
       });
     },
     [form, login, navigate, search.redirect]

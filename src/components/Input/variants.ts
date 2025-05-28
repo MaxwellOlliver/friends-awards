@@ -7,7 +7,6 @@ export const inputVariants = tv({
       "items-center",
       "w-full",
       "h-fit",
-      "text-base",
       "px-4",
       "dark:bg-[#ffffff13]",
       "bg-[#00000010]",
@@ -15,9 +14,10 @@ export const inputVariants = tv({
       "rounded-md",
       "ring-primary",
       "focus-within:ring-2",
+      "transition-all",
     ],
     input: [
-      "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none outline-none py-4 placeholder:text-gray-500 w-full text-base no-arrow mx-0.5 transition-colors duration-200 bg-transparent",
+      "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none outline-none text-sm py-3 placeholder:text-gray-500 w-full text-sm no-arrow mx-0.5 transition-colors duration-200 bg-transparent",
     ],
   },
   variants: {

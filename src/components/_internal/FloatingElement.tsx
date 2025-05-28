@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   memo,
   RefObject,
@@ -8,8 +7,8 @@ import {
   useState,
 } from "react";
 import { Portal } from "./Portal";
-import { cn } from "@/utils/cn";
 import { useClickOutside } from "@/hooks/useClickOutside";
+import { cn } from "@/utils/cn";
 
 type Position = "top-left" | "top-right" | "bottom-left" | "bottom-right";
 
@@ -162,7 +161,7 @@ const FloatingElementComponent = ({
       window.removeEventListener("scroll", handleScroll, true);
       window.removeEventListener("resize", handleScroll);
     };
-  }, [attachToRef, position, isOpen, handleGetAttachToPosition]);
+  }, [attachToRef, position, contentRef.current, isOpen]);
 
   return (
     <Portal>
@@ -181,17 +180,7 @@ const FloatingElementComponent = ({
         style={positionStyle}
         ref={contentRef}
       >
-        <div
-          className={cn(
-            "bg-white",
-            "border",
-            "border-gray-200",
-            "rounded-md",
-            "shadow-sm"
-          )}
-        >
-          {children}
-        </div>
+        <div className={cn("rounded-md", "shadow-sm")}>{children}</div>
       </div>
     </Portal>
   );

@@ -2,7 +2,7 @@ import { cn } from "@/utils/cn";
 import { Info, LucideIcon, X } from "lucide-react";
 import toast from "react-hot-toast";
 import { tv } from "tailwind-variants";
-import { getErrorResponse } from "./axios";
+import { getErrorResponse } from "../http/axios";
 import { AxiosError } from "axios";
 
 interface AddToastProps {
@@ -47,32 +47,37 @@ export const addToast = ({
 }: AddToastProps) => {
   const { container, iconWrapper } = toastVariants({ type });
 
-  return toast.custom((t) => (
-    <div
-      className={cn(
-        container(),
-        t.visible ? "animate-slide-enter" : "animate-slide-leave"
-      )}
-    >
-      <div className="h-full flex items-center">
-        <div className={iconWrapper()}>
-          {Icon ? <Icon className="size-4" /> : <Info className="size-4" />}
+  return toast.custom(
+    (t) => (
+      <div
+        className={cn(
+          container(),
+          t.visible ? "animate-slide-enter" : "animate-slide-leave"
+        )}
+      >
+        <div className="h-full flex items-center">
+          <div className={iconWrapper()}>
+            {Icon ? <Icon className="size-4" /> : <Info className="size-4" />}
+          </div>
+        </div>
+        <div className="h-full text-sm min-w-44">
+          <h2 className="text-white font-semibold">{title}</h2>
+          <p className="text-white">{message}</p>
+        </div>
+        <div className="h-full flex items-center">
+          <button
+            className="text-white p-1 rounded-md hover:bg-white/30 transition-colors duration-200"
+            onClick={() => toast.remove(t.id)}
+          >
+            <X className="size-4" />
+          </button>
         </div>
       </div>
-      <div className="h-full text-sm min-w-44">
-        <h2 className="text-white font-semibold">{title}</h2>
-        <p className="text-white">{message}</p>
-      </div>
-      <div className="h-full flex items-center">
-        <button
-          className="text-white p-1 rounded-md hover:bg-white/30 transition-colors duration-200"
-          onClick={() => toast.remove(t.id)}
-        >
-          <X className="size-4" />
-        </button>
-      </div>
-    </div>
-  ));
+    ),
+    {
+      duration: 5000,
+    }
+  );
 };
 
 export const addToastWithError = ({

@@ -49,12 +49,19 @@ export default {
           "0%": { transform: "translateY(0) scale(1)", opacity: "1" },
           "100%": { transform: "translateY(-100%) scale(0.5)", opacity: "0" },
         },
+        wave: {
+          "0%": { transform: "rotate(0deg)" },
+          "25%": { transform: "rotate(13deg)" },
+          "50%": { transform: "rotate(-10deg)" },
+          "75%": { transform: "rotate(13deg)" },
+          "100%": { transform: "rotate(0deg)" },
+        },
       },
       animation: {
         "slide-down": "slide-down 0.5s ease-in-out",
         "slide-in": "slide-in 0.5s ease-in-out",
         "slide-left": "slide-left 0.5s ease-in-out",
-        "fade-in": "fade-in 0.5s ease-in-out",
+        "fade-in": "fade-in 0.3s ease-in-out",
         "h-grow": "h-grow 0.5s ease-in-out",
         shake: "shake 0.5s infinite",
         "slide-up": "slide-up 0.5s ease-in-out",
@@ -62,9 +69,11 @@ export default {
           "slide-enter 0.2s cubic-bezier(0.21, 1.02, 0.73, 1) forwards",
         "slide-leave":
           "slide-leave 0.2s cubic-bezier(0.21, 1.02, 0.73, 1) forwards",
+        "hand-wave-animation": "wave 800ms infinite ease-in-out",
       },
       colors: {
         background: "#161616",
+        "background-light": "#242323",
         primary: {
           DEFAULT: "#695BFF",
           100: "#FFFFFF",
@@ -76,6 +85,17 @@ export default {
           700: "#4B35FF",
           800: "#2D0FFF",
           900: "#0F00FF",
+        },
+        secondary: {
+          DEFAULT: "#E69529",
+          100: "#fff6e6",
+          200: "#ffe9bf",
+          300: "#ffdb99",
+          400: "#ffce72",
+          500: "#FFA62D",
+          600: "#E69529",
+          700: "#d18a0a",
+          800: "#a97609",
         },
         success: {
           DEFAULT: "#10B981",
@@ -131,7 +151,7 @@ export default {
       },
       boxShadow: {
         "border-primary": "inset 0 0 0 2px #695BFF",
-        "border-secondary": "inset 0 0 0 2px #4B5563",
+        "border-secondary": "inset 0 0 0 2px #E69529",
         "border-success": "inset 0 0 0 2px #10B981",
         "border-warning": "inset 0 0 0 2px #F59E0B",
         "border-error": "inset 0 0 0 2px #EF4444",

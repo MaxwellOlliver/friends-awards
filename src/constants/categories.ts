@@ -14,4 +14,22 @@ export const categories: Categories = [
     description: "Aquele amigo que não prometia nada e entregou tudo",
     nominees: nominees.friends,
   },
+  {
+    name: "Jogador asdad",
+    id: "jogador-2",
+    description: "Aquele amigo que não prometia nada e entregou tudo",
+    nominees: nominees.friends,
+  },
+  {
+    name: "Jogador teste",
+    id: "jogador-3",
+    description: "Aquele amigo que não prometia nada e entregou tudo",
+    nominees: nominees.friends,
+  },
+  {
+    name: "Jogador ccc",
+    id: "jogador-4",
+    description: "Aquele amigo que não prometia nada e entregou tudo",
+    nominees: nominees.friends,
+  },
 ];

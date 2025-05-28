@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { Category } from "@/types/categories";
 import { VotesContext } from "@/contexts/votes-context";
-import { ArrowRight, Check } from "lucide-react";
+import { Check, Crown, Gamepad2, Medal, Trophy, Vote } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/Button";
@@ -31,14 +31,20 @@ export const CategoryVoting = ({
 
   return (
     <div className="flex flex-col max-w-[900px]">
+      <div className="flex gap-4 text-white mb-8">
+        <Gamepad2 className="size-8" />
+        <Crown className="size-8" />
+        <Trophy className="size-8" />
+        <Medal className="size-8" />
+      </div>
       <h1
-        className="text-4xl font-bold mb-4 animate-slide-down opacity-0"
+        className="text-4xl font-bold mb-2"
         style={{ animationDelay: "200ms", animationFillMode: "forwards" }}
       >
         {category.name}
       </h1>
       <h5
-        className="text-1xl font-light mb-8 animate-slide-down opacity-0"
+        className="text-1xl font-light mb-12"
         style={{ animationDelay: "600ms", animationFillMode: "forwards" }}
       >
         {category.description}
@@ -48,7 +54,7 @@ export const CategoryVoting = ({
           <button
             key={nominee}
             className={cn(
-              "w-full flex items-center opacity-0 rounded-full text-white px-4 py-2 gap-2 hover:bg-[#202020] transition-colors animate-slide-down",
+              "w-full flex items-center rounded-md text-white px-4 py-2 gap-2 hover:bg-[#202020] transition-colors",
               {
                 "bg-white text-black hover:bg-white":
                   selectedNominee === nominee,
@@ -76,19 +82,23 @@ export const CategoryVoting = ({
           </button>
         ))}
       </div>
-      <Button
-        color="white"
-        onClick={handleRegisterVote}
-        disabled={!selectedNominee}
-        className="opacity-0 animate-slide-down mt-8"
+      <footer
+        className="opacity-0 animate-slide-down mt-12"
         style={{
           animationDelay: `${1200 + category.nominees.length * 200}ms`,
           animationFillMode: "forwards",
         }}
-        icon={ArrowRight}
       >
-        Registrar voto
-      </Button>
+        <Button
+          color="primary"
+          onClick={handleRegisterVote}
+          disabled={!selectedNominee}
+          iconLeft={Vote}
+          className="w-full"
+        >
+          Registrar voto
+        </Button>
+      </footer>
     </div>
   );
 };

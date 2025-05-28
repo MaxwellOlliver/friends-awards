@@ -5,6 +5,7 @@ import { LogOut, User } from "lucide-react";
 export const Navbar = () => {
   const router = useRouter();
   const logout = useAuthStore((state) => state.logout);
+  const user = useAuthStore((state) => state.user);
 
   const handleLogout = () => {
     logout();
@@ -12,9 +13,9 @@ export const Navbar = () => {
   };
 
   return (
-    <div className="flex items-center justify-end w-full h-16 px-4 ">
+    <div className="flex items-center justify-end w-full h-20 px-4 ">
       <div className="flex items-center gap-4">
-        <span>Noobmaster69</span>
+        <span>{user?.username}</span>
         <div className="flex items-center justify-center border border-white rounded-full p-1.5">
           <User className="size-5" />
         </div>
