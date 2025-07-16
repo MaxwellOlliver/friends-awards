@@ -1,35 +1,31 @@
-import { accountService } from "@/modules/common/services/account-service";
-import { AuthStore } from "@/store/auth-store";
-import { tryCatch } from "@/utils/error";
-import {
-  Outlet,
-  ScrollRestoration,
-  createRootRouteWithContext,
-} from "@tanstack/react-router";
+import { accountService } from '@/modules/common/services/account-service'
+import { AuthStore } from '@/store/auth-store'
+import { tryCatch } from '@/utils/error'
+import { Outlet, ScrollRestoration, createRootRouteWithContext } from '@tanstack/react-router'
 
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 
 interface RouterWithContext {
-  auth?: AuthStore;
+  auth?: AuthStore
 }
 
 export const Route = createRootRouteWithContext<RouterWithContext>()({
   component: RootComponent,
   beforeLoad: async ({ context }) => {
-    const { auth } = context;
+    const { auth } = context
 
     if (auth?.isAuthenticated && !auth.user) {
-      const [error, data] = await tryCatch(accountService.getLoggedProfile());
+      const [error, data] = await tryCatch(accountService.getLoggedProfile())
 
       if (error) {
-        auth.setIsAuthenticated(false);
-        return;
+        auth.setIsAuthenticated(false)
+        return
       }
 
-      auth.setUser(data.participant);
+      auth.setUser(data.participant)
     }
   },
-});
+})
 
 function RootComponent() {
   return (
@@ -38,5 +34,5 @@ function RootComponent() {
       <Outlet />
       <TanStackRouterDevtools />
     </div>
-  );
+  )
 }
